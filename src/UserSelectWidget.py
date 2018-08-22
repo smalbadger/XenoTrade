@@ -23,9 +23,11 @@ class UserSelectWidget(QWidget):
 		self.hideLoginForm()
 		
 	def createElements(self):
-		self.userButtons = [UserTile(u) for u in self.kernel.getAllUsers()]
+		self.userButtons = [UserTile(u, self) for u in self.kernel.getAllUsers()]
 		for b, u in zip(self.userButtons, self.kernel.getAllUsers()):
 			b.setProfilePicture(self.kernel.usersDir+u+'/profile/profile_pic.png')
+			b.createLayout()
+			
 		self.newUserButton = QPushButton('New User')
 		self.nevermindButton = QPushButton("Nevermind")
 		self.newUserNameField = QLineEdit("Username")
@@ -43,12 +45,18 @@ class UserSelectWidget(QWidget):
 		self.selectedUser = None
 		
 	def createLayout(self):
-		self.layout = QVBoxLayout(self)
 		self.existingUsersLayout = QHBoxLayout()
+		self.existingUsersLayout.addStretch()
 		for ub in self.userButtons:
+			ub.resize(100,120)
 			self.existingUsersLayout.addWidget(ub)
-		self.layout.addLayout(self.existingUsersLayout)	
+			self.existingUsersLayout.addStretch()
 		
+		self.layout = QVBoxLayout(self)
+		self.setLayout(self.layout)
+		self.layout.addStretch()
+		self.layout.addLayout(self.existingUsersLayout)	
+		self.layout.addStretch()
 		self.layout.addWidget(self.newUserButton)
 		self.layout.addWidget(self.nevermindButton)
 		self.layout.addWidget(self.newUserNameField)
@@ -60,14 +68,17 @@ class UserSelectWidget(QWidget):
 		self.layout.addWidget(self.existingUserLoginField)
 		self.layout.addWidget(self.existingUserLoginErrorLabel)
 		self.layout.addWidget(self.existingUserLoginButton)
+		self.layout.addStretch()
 		
 	def createActions(self):
 		self.newUserButton.clicked.connect(self.revealNewUserForm)
 		self.nevermindButton.clicked.connect(self.hideNewUserForm)
 		self.submitNewUserButton.clicked.connect(self.submitNewUserRequest)
 		self.existingUserLoginButton.clicked.connect(self.login)
-		for button in self.userButtons:
-			button.clicked.connect(lambda: self.revealLoginForm(button.text()))
+		for btn in self.userButtons:
+			btn.nameButton.clicked.connect(
+				lambda:self.revealLoginForm(btn.nameButton.text())
+			)
 		
 	def revealNewUserForm(self):
 		self.hideLoginForm()
@@ -89,6 +100,7 @@ class UserSelectWidget(QWidget):
 		self.nevermindButton.hide()
 		
 	def revealLoginForm(self, user):
+		self.hideNewUserForm()
 		self.selectedUser = user
 		self.existingUserLoginButton.show()
 		self.existingUserLoginErrorLabel.show()
@@ -123,8 +135,15 @@ class UserSelectWidget(QWidget):
 		if err_msg != '':
 			return
 			
-		self.kernel.addUser(userName, pwd)
-		self.parent.close()
+		err = self.kernel.addUser(userName, pwd)
+		
+		if err:
+			self.newUserNameErrorLabel.setText(err)
+			self.newPasswordErrorLabel.setText(err)
+			self.newUserNameErrorLabel.show()
+			self.newPasswordErrorLabel.show()
+		else:
+			self.parent.initDashboardGUI()
 		
 	def login(self):
 		assert(self.selectedUser != None)
@@ -133,7 +152,6 @@ class UserSelectWidget(QWidget):
 		if self.kernel.curUser == None:
 			err = "Invalid username or password"
 			self.existingUserLoginErrorLabel.setText(err)
+			self.existingUserLoginErrorLabel.show()
 		else:
-			self.parent.close()
-		
-		
+			self.parent.initDashboardGUI()

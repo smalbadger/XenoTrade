@@ -1,4 +1,5 @@
-from passlib.apache import HtpasswdFile
+
+from Robinhood      import Robinhood
 
 class User:
 	def __init__(self, kernel, directory):
@@ -7,23 +8,40 @@ class User:
 		self.userName   = temp[temp.rfind('/')+1:]
 		self.userDir	= directory
 		self.verified   = False
-		self.credFile   = HtpasswdFile(directory + '.credentials.htpasswd')
+		self.trader     = Robinhood()
 		
 	def __del__(self):
-		pass
+		try:
+			self.trader.logout()
+			self.verified = False
+		except:
+			return "Error: Logout failed (Unknown reason)"
 		
-	def verify(self, password):
-		print(self.credFile.users())
-		assert(self.userName in self.credFile.users())
-		self.verified = self.credFile.check_password(self.userName, password)
+	def verify(self, pwd):
+		'''
+		Uses the user's username and the password provided to login to 
+		the robinhood API.
 		
-	def setPassword(self, pwd, verifyFirst=True):
-		if verifyFirst:
-			pass
-		else:
-			self.credFile.set_password(self.userName, pwd)
-			self.credFile.save()
-	
+		Case 1) User is already logged in: 
+				- return None
+		Case 2) User is not logged in, but entered false credentials: 
+				- return error (see below)
+		Case 3) User is not logged in, but entered correct credentials: 
+				- log user in and return None
+		Case 4) Unknown error: 
+				- return login failed error
+		'''
+		
+		if self.verified:
+			return
+			
+		try:
+			self.verified = self.trader.login(username=self.userName, password=pwd)
+			if not self.verified:
+				return "Error: Your login credentials did not match with Robinhood's servers"
+			self.verified = True
+		except:
+			return "Error: Login failed (Unknown reason)"
 	
 	def readSettings(self):
 		pass

@@ -1,3 +1,7 @@
+# remove compiled python files because they'll change every time 
+# a source file changes
 src/__pycache__/
+
+# Omit all users' directories except for the .__template__ directory.
 Users/**
 ! Users/.__template/**

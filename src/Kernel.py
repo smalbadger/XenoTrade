@@ -23,11 +23,8 @@ class Kernel:
 	###########################################################################
 	def switchUser(self, username, password):
 		self.curUser = User(self, self.usersDir + username + '/')
-		self.curUser.verify(password)
-		if not self.curUser.verified:
-			self.curUser = None
-			return False
-		return True
+		err = self.curUser.verify(password)
+		return err
 		
 	def getAllUsers(self):
 		users = os.listdir(self.baseDir + 'Users/')
@@ -40,14 +37,16 @@ class Kernel:
 		return self.curUser
 	
 	def addUser(self, username, password):
-		template = self.usersDir + '.__template__/'
-		newUserDir = self.usersDir + username + '/'
-		os.mkdir(newUserDir)
-		copy_tree(template, newUserDir)
+		err = self.switchUser(username, password)
+		if err:
+			return err
+		else:
+			template = self.usersDir + '.__template__/'
+			newUserDir = self.usersDir + username + '/'
+			os.mkdir(newUserDir)
+			copy_tree(template, newUserDir)
 		
-		self.curUser = User(self, self.usersDir + username + '/')
-		self.curUser.setPassword(password, verifyFirst=False)
-		self.switchUser(username, password)
+		
 		
 	def userExists(self, user):
 		return user in self.getAllUsers()

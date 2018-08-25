@@ -6,6 +6,7 @@ from PySide2.QtWidgets import QLineEdit
 from PySide2.QtWidgets import QLabel
 
 from pprint import pprint
+from Stock import Stock
 
 class DashboardWidget(QWidget):
 	def __init__(self, kernel, parent=None):
@@ -22,20 +23,10 @@ class DashboardWidget(QWidget):
 	def createElements(self):
 		self.nameLabel = QLabel('Hi, ' + self.kernel.curUser.userName)
 		owned = self.kernel.curUser.trader.securities_owned()
-		#pprint(owned)
 		for security in owned['results']:
-			print('-----------------------------------------------------------')
-			print('Position:')
-			pprint(security)
-			print('Instrument:')
-			ins = self.kernel.curUser.trader.instrument(security['instrument'])
-			pprint(ins)
-			print('Fundamentals:')
-			fund = self.kernel.curUser.trader.fundamentals(url=ins['fundamentals'])
-			pprint(fund)
-			print('-----------------------------------------------------------')
-		#print(self.kernel.curUser.trader.instruments('CMG'))
-		
+			stock = Stock(self.kernel.curUser.trader, pos=security)
+			stock.printInfo()
+			
 	def createLayout(self):
 		self.layout = QVBoxLayout()
 		self.layout.addWidget(self.nameLabel)

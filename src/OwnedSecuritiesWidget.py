@@ -5,35 +5,28 @@ from PySide2.QtWidgets import QWidget
 from PySide2.QtWidgets import QLineEdit
 from PySide2.QtWidgets import QLabel
 
-from pprint import pprint
 
-class DashboardWidget(QWidget):
+class SecuritiesListWidget(QWidget):
 	def __init__(self, kernel, parent=None):
-		super(DashboardWidget, self).__init__(parent)
+		super(OwnedSecuritiesWidget, self).__init__(parent)
 		self.kernel = kernel
 		self.parent = parent
 		self.initUI()
+		self.securities = [] #each element should be a stock
 		
 	def initUI(self):
-		self.createElements()
 		self.createLayout()
 		self.createActions()
 		
-	def createElements(self):
-		self.nameLabel = QLabel('Hi, ' + self.kernel.curUser.userName)
+	def createSecuritiesWidgets(self):
 		owned = self.kernel.curUser.trader.securities_owned()
-		#pprint(owned)
 		for security in owned['results']:
-			print('-----------------------------------------------------------')
-			print('Position:')
-			pprint(security)
-			print('Instrument:')
+			print(security['instrument'])
 			ins = self.kernel.curUser.trader.instrument(security['instrument'])
-			pprint(ins)
-			print('Fundamentals:')
+			#pprint(ins)
+			print("{}:".format(ins['name']))
 			fund = self.kernel.curUser.trader.fundamentals(url=ins['fundamentals'])
 			pprint(fund)
-			print('-----------------------------------------------------------')
 		#print(self.kernel.curUser.trader.instruments('CMG'))
 		
 	def createLayout(self):

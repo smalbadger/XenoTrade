@@ -2,12 +2,8 @@ from PySide2 import QtCore
 from PySide2 import QtGui
 
 from PySide2.QtWidgets import QApplication
-from PySide2.QtWidgets import QLabel
 from PySide2.QtWidgets import QMainWindow
-from PySide2.QtWidgets import QMenuBar
-from PySide2.QtWidgets import QAction
 from PySide2.QtGui	   import QPalette
-
 
 import sys
 import os

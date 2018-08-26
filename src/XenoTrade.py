@@ -11,6 +11,7 @@ import os
 from Kernel           import Kernel
 from UserSelectWidget import UserSelectWidget
 from DashboardWidget  import DashboardWidget
+from StockListWidget  import StockListWidget
 
 
 class XenoTradeGUI(QMainWindow):

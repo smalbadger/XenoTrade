@@ -4,9 +4,12 @@ from PySide2.QtWidgets import QVBoxLayout
 from PySide2.QtWidgets import QWidget
 from PySide2.QtWidgets import QLineEdit
 from PySide2.QtWidgets import QLabel
+from PySide2.QtWidgets import QScrollArea
 
 from pprint import pprint
 from Stock import Stock
+from StockListWidget import StockListWidget
+
 
 class DashboardWidget(QWidget):
 	def __init__(self, kernel, parent=None):
@@ -21,16 +24,14 @@ class DashboardWidget(QWidget):
 		self.createActions()
 		
 	def createElements(self):
-		self.nameLabel = QLabel('Hi, ' + self.kernel.curUser.userName)
-		owned = self.kernel.curUser.trader.securities_owned()
-		for security in owned['results']:
-			stock = Stock(self.kernel.curUser.trader, pos=security)
-			stock.printInfo()
+		self.scrollArea = QScrollArea()
+		self.stockListWidget = StockListWidget(self.kernel)
 			
 	def createLayout(self):
 		self.layout = QVBoxLayout()
-		self.layout.addWidget(self.nameLabel)
 		self.setLayout(self.layout)
+		self.layout.addWidget(self.scrollArea)
+		self.scrollArea.setWidget(self.stockListWidget)
 		
 	def createActions(self):
 		pass

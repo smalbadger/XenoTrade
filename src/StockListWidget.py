@@ -2,37 +2,37 @@ from PySide2.QtWidgets import QPushButton
 from PySide2.QtWidgets import QHBoxLayout
 from PySide2.QtWidgets import QVBoxLayout
 from PySide2.QtWidgets import QWidget
-from PySide2.QtWidgets import QLineEdit
 from PySide2.QtWidgets import QLabel
 
+from Stock import Stock
+from StockWidget import StockWidget
 
-class SecuritiesListWidget(QWidget):
+class StockListWidget(QWidget):
 	def __init__(self, kernel, parent=None):
-		super(OwnedSecuritiesWidget, self).__init__(parent)
+		super(StockListWidget, self).__init__(parent)
 		self.kernel = kernel
 		self.parent = parent
 		self.initUI()
-		self.securities = [] #each element should be a stock
 		
 	def initUI(self):
+		self.createElements()
 		self.createLayout()
 		self.createActions()
 		
-	def createSecuritiesWidgets(self):
+	def createElements(self):
 		owned = self.kernel.curUser.trader.securities_owned()
+		self.stockWidgets = []
 		for security in owned['results']:
-			print(security['instrument'])
-			ins = self.kernel.curUser.trader.instrument(security['instrument'])
-			#pprint(ins)
-			print("{}:".format(ins['name']))
-			fund = self.kernel.curUser.trader.fundamentals(url=ins['fundamentals'])
-			pprint(fund)
-		#print(self.kernel.curUser.trader.instruments('CMG'))
-		
+			stock = Stock(self.kernel.curUser.trader, pos=security)
+			w = StockWidget(stock)
+			#w.setStyleSheet(".StockWidget{border: 1px solid grey}")
+			self.stockWidgets.append(w)
+			
 	def createLayout(self):
 		self.layout = QVBoxLayout()
-		self.layout.addWidget(self.nameLabel)
 		self.setLayout(self.layout)
+		for w in self.stockWidgets:
+			self.layout.addWidget(w)
 		
 	def createActions(self):
 		pass

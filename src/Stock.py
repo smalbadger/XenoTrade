@@ -22,7 +22,7 @@ class Stock:
 		self.instrument = t.instrument(ins)
 		self.fundamentals = t.fundamentals(url=self.instrument['fundamentals'])
 		self.quote = self.trader.quote_data(self.symbol())
-		self.popularity = self.trader.get_popularity(self.symbol)
+		self.popularity = self.trader.get_popularity(self.symbol())
 
 	def updateAllProperties(self):
 		if self.position:
@@ -32,7 +32,7 @@ class Stock:
 		self.instrument = self.trader.instrument(self.instrumentURL())
 		self.fundamentals = self.trader.fundamentals(self.fundamentalsURL())
 		self.quote = self.trader.quote_data(self.symbol())
-		self.popularity = self.trader.get_popularity(self.symbol)
+		self.popularity = self.trader.get_popularity(self.symbol())
 		
 		
 	def printInfo(self, printOriginals=False):
@@ -113,7 +113,19 @@ class Stock:
 		print("previousCloseDate: {}".format(self.previousCloseDate()))
 		print("tradingHalted: {}".format(self.tradingHalted()))
 		print("quoteUpdatedAt: {}".format(self.quoteUpdatedAt()))
+		print("percentChange: {}".format(self.percentChange()))
 		print("+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+")
+		
+		
+	def getAllInfo(self):
+		allDict = {}
+		for d in (self.position, self.instrument, self.fundamentals, self.quote):
+			try:
+				allDict.update(d)
+			except:
+				pass
+		allDict['popularity'] = self.popularity
+		return allDict
 		
 	###########################################################################
 	###########################  Positions Getters  ###########################
@@ -465,61 +477,61 @@ class Stock:
 	###########################################################################
 	def adjustedPreviousClose(self):
 		try:
-			return self.quote['adjusted_previous_close']
+			return float(self.quote['adjusted_previous_close'])
 		except:
 			return
 			
 	def askPrice(self):
 		try:
-			return self.quote['ask_price']
+			return float(self.quote['ask_price'])
 		except:
 			return
 			
 	def askSize(self):
 		try:
-			return self.quote['ask_size']
+			return float(self.quote['ask_size'])
 		except:
 			return
 			
 	def bidPrice(self):
 		try:
-			return self.quote['bid_price']
+			return float(self.quote['bid_price'])
 		except:
 			return
 			
 	def bidSize(self):
 		try:
-			return self.quote['bid_size']
+			return float(self.quote['bid_size'])
 		except:
 			return
 			
 	def hasTraded(self):
 		try:
-			return self.quote['has_traded']
+			return float(self.quote['has_traded'])
 		except:
 			return
 			
 	def lastExtendedHoursTradePrice(self):
 		try:
-			return self.quote['last_extended_hours_trade_price']
+			return float(self.quote['last_extended_hours_trade_price'])
 		except:
 			return
 			
 	def lastTradePrice(self):
 		try:
-			return self.quote['last_trade_price']
+			return float(self.quote['last_trade_price'])
 		except:
 			return
 			
 	def lastTradePriceSource(self):
 		try:
-			return self.quote['last_trade_price_source']
+			return float(self.quote['last_trade_price_source'])
 		except:
 			return
 			
 	def previousClose(self):
 		try:
-			return self.quote['previous_close']
+			return float(self.quote['previous_close'])
 		except:
 			return
 			
@@ -533,7 +545,7 @@ class Stock:
 			
 	def tradingHalted(self):
 		try:
-			return self.quote['trading_halted']
+			return bool(self.quote['trading_halted'])
 		except:
 			return
 			
@@ -547,7 +559,7 @@ class Stock:
 			
 	def popularity(self):
 		try:
-			return self.popularity
+			return int(self.popularity)
 		except:
 			return
 			
@@ -558,4 +570,14 @@ class Stock:
 		TODO: 
 		add to Robinhood API to get information about the market that this stock
 	'''
+	
+	###########################################################################
+	##########################  Analysis Information  #########################
+	###########################################################################
+	def percentChange(self):
+		lastPrice = self.lastTradePrice()
+		previousClose = self.previousClose()
+		diff = lastPrice - previousClose
+		return (diff/previousClose) * 100
+	
 	

@@ -52,22 +52,30 @@ class UserSelectWidget(QWidget):
 			self.existingUsersLayout.addWidget(ub)
 			self.existingUsersLayout.addStretch()
 		
+		self.formLayout = QVBoxLayout()
+		self.formLayout.addStretch()
+		self.formLayout.addWidget(self.newUserButton)
+		self.formLayout.addWidget(self.nevermindButton)
+		self.formLayout.addWidget(self.newUserNameField)
+		self.formLayout.addWidget(self.newUserNameErrorLabel)
+		self.formLayout.addWidget(self.newUserPasswordField)
+		self.formLayout.addWidget(self.newUserConfirmPasswordField)
+		self.formLayout.addWidget(self.newPasswordErrorLabel)
+		self.formLayout.addWidget(self.submitNewUserButton)
+		self.formLayout.addWidget(self.existingUserLoginField)
+		self.formLayout.addWidget(self.existingUserLoginErrorLabel)
+		self.formLayout.addWidget(self.existingUserLoginButton)
+		self.formLayout.addStretch()
+		
+		self.lowLayout = QHBoxLayout()
+		self.lowLayout.addStretch()
+		self.lowLayout.addLayout(self.formLayout)
+		self.lowLayout.addStretch()
+		
 		self.layout = QVBoxLayout(self)
-		self.setLayout(self.layout)
 		self.layout.addStretch()
-		self.layout.addLayout(self.existingUsersLayout)	
-		self.layout.addStretch()
-		self.layout.addWidget(self.newUserButton)
-		self.layout.addWidget(self.nevermindButton)
-		self.layout.addWidget(self.newUserNameField)
-		self.layout.addWidget(self.newUserNameErrorLabel)
-		self.layout.addWidget(self.newUserPasswordField)
-		self.layout.addWidget(self.newUserConfirmPasswordField)
-		self.layout.addWidget(self.newPasswordErrorLabel)
-		self.layout.addWidget(self.submitNewUserButton)
-		self.layout.addWidget(self.existingUserLoginField)
-		self.layout.addWidget(self.existingUserLoginErrorLabel)
-		self.layout.addWidget(self.existingUserLoginButton)
+		self.layout.addLayout(self.existingUsersLayout)
+		self.layout.addLayout(self.lowLayout)
 		self.layout.addStretch()
 		
 	def createActions(self):
@@ -143,7 +151,7 @@ class UserSelectWidget(QWidget):
 			self.newUserNameErrorLabel.show()
 			self.newPasswordErrorLabel.show()
 		else:
-			self.parent.initDashboardGUI()
+			self.parent.loadApplication()
 		
 	def login(self):
 		assert(self.selectedUser != None)
@@ -154,4 +162,4 @@ class UserSelectWidget(QWidget):
 			self.existingUserLoginErrorLabel.setText(err)
 			self.existingUserLoginErrorLabel.show()
 		else:
-			self.parent.initDashboardGUI()
+			self.parent.loadApplication()

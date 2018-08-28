@@ -20,13 +20,9 @@ class StockListWidget(QWidget):
 		self.createActions()
 		
 	def createElements(self):
-		owned = self.kernel.curUser.trader.securities_owned()
 		self.stockWidgets = []
-		for security in owned['results']:
-			stock = Stock(self.kernel.curUser.trader, pos=security)
-			w = StockWidget(stock)
-			#w.setStyleSheet(".StockWidget{border: 1px solid grey}")
-			self.stockWidgets.append(w)
+		for security in self.kernel.curUser.stocks(owned=True):
+			self.stockWidgets.append(StockWidget(security))
 			
 	def createLayout(self):
 		self.layout = QVBoxLayout()

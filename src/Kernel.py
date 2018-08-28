@@ -6,7 +6,8 @@ from distutils.dir_util import copy_tree
 from User import User
 
 class Kernel:
-	def __init__(self, user=None):
+	def __init__(self, app, user=None):
+		self.app = app
 		self.currentUser = user
 		self.baseDir     = os.getcwd().replace('\\','/')[:-3]
 		self.usersDir    = self.baseDir + 'Users/'

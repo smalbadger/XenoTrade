@@ -9,6 +9,44 @@ from PySide2.QtWidgets import QGroupBox
 from Stock import Stock
 
 class StockWidget(QGroupBox):
+	tickerAndNameWidth = 100
+	priceWidth = 80
+	percentChangeWidth = 80
+	
+	baseStyle = """
+		QWidget#stock_widget
+		{
+			border: 		2px solid black; 
+			border-radius: 	20px;
+		}
+		
+		QWidget#stock_symbol
+		{
+			font-family: 	"Monospace", "Courier New";
+			font-size: 		20px;
+		}
+		
+		QWidget#stock_name
+		{
+			font-family:	Serif, Times;
+			font-size:		11px;
+		}
+	"""
+	
+	goodStyle = """
+		QWidget#stock_percent_change
+		{
+			color:			green;
+		}
+	"""
+	
+	badStyle = """
+		QWidget#stock_percent_change
+		{
+			color:			red;
+		}
+	"""
+	
 	def __init__(self, stock, parent=None):
 		super(StockWidget, self).__init__(parent)
 		self.stock = stock
@@ -20,6 +58,7 @@ class StockWidget(QGroupBox):
 		self.createLayout()
 		self.createStyle()
 		self.createActions()
+		self.update()
 		
 	def createElements(self):
 		name = self.stock.simpleName()
@@ -43,39 +82,37 @@ class StockWidget(QGroupBox):
 		self.setLayout(self.mainLayout)
 		
 	def createStyle(self):
-		tickerAndNameWidth = 100
-		priceWidth = 80
-		percentChangeWidth = 80
-		styleStr = """
-			QWidget#stock_widget
-			{
-				border: 		2px solid black; 
-				border-radius: 	20px;
-			}
-			
-			QWidget#stock_symbol
-			{
-				font-family: 	"Monospace", "Courier New";
-				font-size: 		20px;
-			}
-			
-			QWidget#stock_name
-			{
-				font-family:	Serif, Times;
-				font-size:		11px;
-			}
-		"""
-		self.name.setFixedWidth(tickerAndNameWidth)
-		self.price.setFixedWidth(priceWidth)
-		self.percentChange.setFixedWidth(percentChangeWidth)
+		self.name.setFixedWidth(StockWidget.tickerAndNameWidth)
+		self.price.setFixedWidth(StockWidget.priceWidth)
+		self.percentChange.setFixedWidth(StockWidget.percentChangeWidth)
 		
 		self.setObjectName("stock_widget")
 		self.symbol.setObjectName("stock_symbol")
 		self.name.setObjectName("stock_name")
 		self.price.setObjectName("stock_price")
-		self.percentChange.setObjectName
+		self.percentChange.setObjectName("stock_percent_change")
+		
+	def update(self):
+		self.updateStyle()
+		
+	def updateStyle(self):
+		styleStr = StockWidget.baseStyle
+		pc = self.stock.percentChange()
+		
+		if   pc > 0:
+			styleStr += StockWidget.goodStyle
+		elif pc < 0:
+			styleStr += StockWidget.badStyle
+			
 		self.setStyleSheet(styleStr)
-		self.symbol.setStyleSheet("")
 		
 	def createActions(self):
+		#NOTE: No actions are set 
 		pass
+		#self.mouseReleaseEvent = self.onClicked()
+		
+	def onClicked(self):
+		print("Clicked!")
+		
+		
+		

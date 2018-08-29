@@ -3,13 +3,13 @@ A trading and analysis platform like you've never seen before!
 
 ## System Requirements
 This project has a few dependencies, but fortunately most of them can be simply installed using pip (or pip3 depending of your system)
-Package | Version | Where To Get?
-------- | ------- | -------------
-Robinhood Account | - | [sign up](https://signup.robinhood.com/)
-Python  | >=3.4   | [download](https://www.python.org/downloads/) *
-Robinhood API | >=1.0.1 | [clone](https://github.com/smalbadger/Robinhood)
-numpy | latest | sudo pip3 install numpy
-matplotlib | latest | sudo pip3 install matplotlib
+| Package | Version | Where To Get? |
+| ------- | ------- | ------------- |
+| Robinhood Account | - | [sign up](https://signup.robinhood.com/) |
+| Python  | >=3.4   | [download](https://www.python.org/downloads/) * |
+| Robinhood API | >=1.0.1 | [clone](https://github.com/smalbadger/Robinhood) |
+| numpy | latest | sudo pip3 install numpy |
+| matplotlib | latest | sudo pip3 install matplotlib |
 
 Notes:
  * make sure to install pip (or pip3) along with python3

@@ -1,4 +1,4 @@
-# XenoTrade
+# :alien: XenoTrade :alien:
 A trading and analysis platform like you've never seen before!
 
 ### About

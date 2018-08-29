@@ -61,10 +61,17 @@ class LoadingScreen(QGroupBox):
             sleep(.001)
             if j >= 1000:
                 j = 0
+                k = i+4
                 self.loadingSquares[i % 8].setStyleSheet("background-color: blue")
                 self.loadingSquares[i % 8].repaint()
                 self.loadingSquares[(i % 8) - 1].setStyleSheet("background-color: purple")
                 self.loadingSquares[(i % 8) - 1].repaint()
+
+                self.loadingSquares[k % 8].setStyleSheet("background-color: blue")
+                self.loadingSquares[k % 8].repaint()
+                self.loadingSquares[(k % 8) - 1].setStyleSheet("background-color: purple")
+                self.loadingSquares[(k % 8) - 1].repaint()
+
                 self.kernel.app.processEvents()
                 i += 1
             j += 1

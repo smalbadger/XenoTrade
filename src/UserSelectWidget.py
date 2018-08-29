@@ -7,7 +7,6 @@ from PySide2.QtWidgets import QLabel
 
 from UserTile import UserTile
 
-
 class UserSelectWidget(QWidget):
 	def __init__(self, kernel, parent=None):
 		super(UserSelectWidget, self).__init__(parent)

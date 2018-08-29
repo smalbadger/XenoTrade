@@ -1,8 +1,14 @@
 # XenoTrade
 A trading and analysis platform like you've never seen before!
 
-## System Requirements
+### About
+XenoTrade is an experimental trading application that utilizes Robinhood's existing infrastructure. As such, each user will have to create a Robinhood account before being able to use this application. The approval process can take quite a bit of time, so I recommend you [create an account](https://signup.robinhood.com/) now. Robinhood was chosen because they offer completely commision-free trading and it is relatively simple to pull the information needed from their servers.
 
+So why would we make essentially a wrapper application around Robinhood's existing framework if they already have a clean and simple website and mobile application? The answer: **Freedom**. By storing data locally, we have should be able to analyze markets, individual stocks, cryptocurrencies, options, etc, however we want. Furthermore, we will have the ability to place trades. XenoTrade makes it very simple to design modularized custom 'widgets' to perform any analysis desired.
+
+Once XenoTrade is stable and well developed, the next goal is to incorporate a trading bot dock where the user could select bots to run either in simulation or in real life. Each bot would have a standardized architecture, but different decision making algorithms making simple to run each of the bots concurrently in the same window in the form of widgets.
+
+### System Requirements
 | What    | Version | Where To Get? |
 | ------- | ------- | ------------- |
 | Robinhood Account | - | [sign up](https://signup.robinhood.com/) |

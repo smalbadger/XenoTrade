@@ -2,7 +2,7 @@
 A trading and analysis platform like you've never seen before!
 
 ## System Requirements
-This project has a few dependencies, but fortunately most of them can be simply installed using pip (or pip3 depending of your system)
+
 | Package | Version | Where To Get? |
 | ------- | ------- | ------------- |
 | Robinhood Account | - | [sign up](https://signup.robinhood.com/) |

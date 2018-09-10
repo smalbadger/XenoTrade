@@ -15,8 +15,6 @@ from DashboardWidget  import DashboardWidget
 from StockListWidget  import StockListWidget
 from LoadingScreen    import LoadingScreen
 
-# TODO: Make downloading the initial stock data much faster by fetching all wanted stocks concurrently
-
 class XenoTradeGUI(QMainWindow):
     def __init__(self, kernel, parent=None):
         super(XenoTradeGUI, self).__init__(parent)

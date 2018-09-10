@@ -1,6 +1,8 @@
 from PySide2.QtCore import QObject, Signal
 
+import sys
 from time import sleep
+from concurrent.futures import ThreadPoolExecutor
 
 from Robinhood import Robinhood
 from Stock     import Stock
@@ -62,13 +64,37 @@ class User(QObject):
             return []
 
     def pullStocksFromRobinhood(self):
-        owned = self.kernel.curUser.trader.securities_owned()['results']
+        o = self.kernel.curUser.trader.securities_owned()['results'] # o is for owned
+        t = self.kernel.curUser.trader
         self.ownedStocks = []
-        for i in range(len(owned)):
-            self.ownedStocks.append(Stock(self.kernel.curUser.trader, pos=owned[i]))
+        stockFutures = []
+        with ThreadPoolExecutor(len(o)) as executor:
+            for i in range(len(o)):
+                future = executor.submit(Stock, t, pos=o[i])
+                stockFutures.append(future)
+                
+            for future in stockFutures:
+            	self.ownedStocks.append(future.result())
         self.dataFetchFinished.emit()
 
     def print(self):
         print("Username:", self.userName)
         print("UserDir: ", self.userDir)
         print("Verified:", self.verified)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

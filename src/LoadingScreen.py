@@ -1,3 +1,13 @@
+'''
+Class:      LoadingScreen
+Author:     Sam Badger
+Date:       12 Sept, 2018
+Description:
+            This is a widget that simply displays a loading screen. The loading screen updates 
+            once per second and has 8 squares in a square formation with the words "LOADING" in
+            the center.
+'''
+
 from PySide2.QtWidgets import QHBoxLayout
 from PySide2.QtWidgets import QVBoxLayout
 from PySide2.QtWidgets import QLabel
@@ -7,24 +17,25 @@ from time import sleep
 
 class LoadingScreen(QGroupBox):
     def __init__(self, kernel, username=None, message=None, parent=None):
-        super(LoadingScreen, self).__init__(parent)
+        QGroupBox.__init__(parent)
+        print("Loading")
         self.kernel = kernel
         self.name = username
         self.message = message
 
+        self.createElements()
+        self.createStyle()
+        self.createLayout()
+        self.createActions()
+        
+    def createElements(self):
         self.loadMsg = QLabel("LOADING")
-        self.loadMsg.setFixedWidth(100)
-        self.loadMsg.setFixedHeight(100)
-        self.loadMsg.setStyleSheet("font-size: 21px;")
-
         self.loadingSquares = []
         for i in range(8):
             newSquare = QLabel("")
-            newSquare.setFixedWidth(100)
-            newSquare.setFixedHeight(100)
-            newSquare.setStyleSheet("background-color: purple")
             self.loadingSquares.append(newSquare)
-
+        
+    def createLayout(self):
         vL = QVBoxLayout()
 
         hL = QHBoxLayout()
@@ -44,6 +55,19 @@ class LoadingScreen(QGroupBox):
         vL.addLayout(hL)
 
         self.setLayout(vL)
+        
+    def createActions(self):
+        pass
+    
+    def createStyle(self):
+        self.loadMsg.setFixedWidth(100)
+        self.loadMsg.setFixedHeight(100)
+        self.loadMsg.setStyleSheet("font-size: 21px;")
+        
+        for i in range(8):
+            self.loadingSquares[i].setFixedWidth(100)
+            self.loadingSquares[i].setFixedHeight(100)
+            self.loadingSquares[i].setStyleSheet("background-color: purple")
 
     def startAnimation(self):
         self.stop = False
@@ -56,7 +80,6 @@ class LoadingScreen(QGroupBox):
         i = 0
         j = 0
         self.running = True
-        print("Running!")
         while not self.stop:
             sleep(.001)
             if j >= 1000:
@@ -76,4 +99,3 @@ class LoadingScreen(QGroupBox):
                 i += 1
             j += 1
         self.running = False
-        print("Not Running!")

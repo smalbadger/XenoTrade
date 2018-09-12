@@ -23,7 +23,7 @@ class StockWidget(QGroupBox):
 		QWidget#stock_symbol
 		{
 			font-family: 	"Monospace", "Courier New";
-			font-size: 		20px;
+			font-size: 		30px;
 		}
 		
 		QWidget#stock_name

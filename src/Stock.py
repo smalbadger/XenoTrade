@@ -1,6 +1,9 @@
 from datetime import datetime as dt
 from pprint import pprint
-class Stock:
+
+from XenoObject import XenoObject
+
+class Stock(XenoObject):
     def __init__(self, t, pos=None, ins=None):
         '''
         Params:
@@ -9,7 +12,6 @@ class Stock:
               Robinhood.securities_owned()['results'][index] (if security is owned)
             - The instrument URL of the stock (not needed if security is owned)
         '''
-        print("Making another stock")
         self.trader = t
         self.position = pos
         self.instrument = None

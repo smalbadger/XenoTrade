@@ -3,18 +3,18 @@ from PySide2.QtCore import QObject, Signal
 import sys
 from time import sleep
 from concurrent.futures import ThreadPoolExecutor
-
-from Robinhood import Robinhood
-from Stock     import Stock
-
 from pprint import pprint
-from time import sleep
 
-class User(QObject):
+from XenoObject import XenoObject
+from Robinhood  import Robinhood
+from Stock      import Stock
+
+class User(QObject, XenoObject):
     dataFetchFinished = Signal()
 
     def __init__(self, kernel, directory):
-        super(User, self).__init__()
+        QObject.__init__(self)
+        XenoObject.__init__(self)
         self.kernel		= kernel
         temp            = directory.strip('/')
         self.userName   = temp[temp.rfind('/')+1:]
@@ -43,7 +43,6 @@ class User(QObject):
         Case 4) Unknown error:
                 - return login failed error
         '''
-
         if self.verified:
             return
 
@@ -67,15 +66,17 @@ class User(QObject):
         o = self.kernel.curUser.trader.securities_owned()['results'] # o is for owned
         t = self.kernel.curUser.trader
         self.ownedStocks = []
-        stockFutures = []
         with ThreadPoolExecutor(len(o)) as executor:
             for i in range(len(o)):
                 future = executor.submit(Stock, t, pos=o[i])
-                stockFutures.append(future)
-                
-            for future in stockFutures:
-            	self.ownedStocks.append(future.result())
+                future.add_done_callback(self.addStock_callback)
         self.dataFetchFinished.emit()
+        
+    def addStock_callback(self, future):
+        self.xeno_LockForWriting()
+        self.ownedStocks.append(future.result())
+        self.xeno_UnlockAll()
+        
 
     def print(self):
         print("Username:", self.userName)

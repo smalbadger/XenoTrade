@@ -63,7 +63,17 @@ class XenoTradeGUI(QMainWindow):
 
         widget = DashboardWidget(kernel, self)
         self.setCentralWidget(widget)
-
+        
+    def closeEvent(self, event):
+        if self.kernel.curUser == None:
+            sys.exit(0)
+            
+        try:
+            err = self.kernel.curUser.logout()
+            print(err)
+        finally:
+            print("ERROR: no current user")
+        sys.exit(0)
 
 def setAppStyle(app):
     app.setStyle('Fusion')

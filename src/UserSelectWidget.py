@@ -155,7 +155,8 @@ class UserSelectWidget(QWidget):
 	def login(self):
 		assert(self.selectedUser != None)
 		pwd = self.existingUserLoginField.text()
-		self.kernel.switchUser(self.selectedUser, pwd)
+		err = self.kernel.switchUser(self.selectedUser, pwd)
+		print(err)
 		if self.kernel.curUser == None:
 			err = "Invalid username or password"
 			self.existingUserLoginErrorLabel.setText(err)

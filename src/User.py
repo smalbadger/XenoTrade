@@ -28,6 +28,12 @@ class User(QObject, XenoObject):
             self.verified = False
         except:
             return "Error: Logout failed (Unknown reason)"
+            
+    def logout(self):
+        try:
+            self.trader.logout()
+        finally:
+            return "ERROR: Could not log out."
 
     def verify(self, pwd):
         '''

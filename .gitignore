@@ -5,4 +5,7 @@ src/.idea/
 
 # Omit all users' directories except for the .__template__ directory.
 Users/**
-! Users/.__template/**
+! Users/.__template__/**
+
+# Omit all log files
+logbook/**

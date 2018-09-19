@@ -14,11 +14,12 @@ from PySide2.QtWidgets import QLabel
 from PySide2.QtWidgets import QGroupBox
 
 from time import sleep
+import logging
 
 class LoadingScreen(QGroupBox):
     def __init__(self, kernel, username=None, message=None, parent=None):
-        QGroupBox.__init__(parent)
-        print("Loading")
+        super(LoadingScreen, self).__init__()
+        logging.info("Initializing the loading screen")
         self.kernel = kernel
         self.name = username
         self.message = message
@@ -29,6 +30,7 @@ class LoadingScreen(QGroupBox):
         self.createActions()
         
     def createElements(self):
+        logging.debug("Creating the loading screen elements")
         self.loadMsg = QLabel("LOADING")
         self.loadingSquares = []
         for i in range(8):
@@ -36,6 +38,7 @@ class LoadingScreen(QGroupBox):
             self.loadingSquares.append(newSquare)
         
     def createLayout(self):
+        logging.debug("Creating the loading screen layout")
         vL = QVBoxLayout()
 
         hL = QHBoxLayout()
@@ -57,9 +60,11 @@ class LoadingScreen(QGroupBox):
         self.setLayout(vL)
         
     def createActions(self):
+        logging.debug("Connecting the loading screen's signals and slots.")
         pass
     
     def createStyle(self):
+        logging.debug("Setting the loading screen's style")
         self.loadMsg.setFixedWidth(100)
         self.loadMsg.setFixedHeight(100)
         self.loadMsg.setStyleSheet("font-size: 21px;")
@@ -70,13 +75,16 @@ class LoadingScreen(QGroupBox):
             self.loadingSquares[i].setStyleSheet("background-color: purple")
 
     def startAnimation(self):
+        logging.info("Starting the loading screen's animation")
         self.stop = False
         self.animate()
 
     def stopAnimation(self):
+        logging.info("Stopping the loading screen's animation")
         self.stop = True
 
     def animate(self):
+        logging.info("Playing the loading screen's animation...")
         i = 0
         j = 0
         self.running = True

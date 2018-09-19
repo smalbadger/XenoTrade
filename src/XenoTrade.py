@@ -9,6 +9,8 @@ import sys
 import os
 from time import sleep
 
+import logging
+
 from Kernel           import Kernel
 from UserSelectWidget import UserSelectWidget
 from DashboardWidget  import DashboardWidget
@@ -17,6 +19,7 @@ from LoadingScreen    import LoadingScreen
 
 class XenoTradeGUI(QMainWindow):
     def __init__(self, kernel, parent=None):
+        logging.info("Initializing XenoTrade GUI")
         super(XenoTradeGUI, self).__init__(parent)
         self.kernel = kernel
         self.showMaximized()
@@ -70,12 +73,15 @@ class XenoTradeGUI(QMainWindow):
             
         try:
             err = self.kernel.curUser.logout()
-            print(err)
+            logging.error(err)
         finally:
-            print("ERROR: no current user")
+            logging.error("No current user")
         sys.exit(0)
 
+
+#=============================================================================#
 def setAppStyle(app):
+    logging.info("Setting application style")
     app.setStyle('Fusion')
     palette = QtGui.QPalette()
     palette.setColor(QtGui.QPalette.Window, QtGui.QColor(53,53,53))
@@ -93,12 +99,51 @@ def setAppStyle(app):
     palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
     app.setPalette(palette)
 
+def setupLogging(args):
+    if "--logging-level" in args:
+        lvlStr = ""
+        try:
+            idx = args.find("--logging-level")
+            lvlStr = args[idx + 1]
+        finally:
+            print("USAGE: <python_interpreter> XenoTrade.py --logging-level <importance_level>")
+            sys.exit(1)
+        
+        lvl = None
+        if lvlStr == "DEBUG":
+            lvl = logging.DEBUG
+        elif lvlStr == "INFO":
+            lvl = logging.INFO
+        elif lvlStr == "WARNING":
+            lvl = logging.WARNING
+        elif lvlStr == "ERROR":
+            lvl = logging.ERROR
+        elif lvlStr == "CRITICAL":
+            lvl = logging.CRITICAL
+        else:
+            print("Logging level {} is not recognized".format(lvlStr))
+            print("Using INFO as the logging level by default.")
+            lvl = logging.INFO
+    else:
+        print("Logging level not specified.")
+        print("Using INFO as the logging level by default.")
+        lvl = logging.INFO
+        
+    logging.basicConfig(filename = '../logbook/XenoTrade.log', level = lvl)
+    logging.info("================================== NEW LOG ==================================")
+
+
 
 
 if __name__ == '__main__':
+    setupLogging(sys.argv)
+
+    logging.info("Creating Qt application")
     app = QApplication(sys.argv)
     setAppStyle(app)
     kernel = Kernel(app)
     frame = XenoTradeGUI(kernel)
     frame.show()
     sys.exit(app.exec_())
+    
+    

@@ -16,6 +16,7 @@ Once XenoTrade is stable and well developed, the next goal is to incorporate a t
 | Robinhood API | >=1.0.1 | [clone](https://github.com/smalbadger/Robinhood) |
 | numpy | latest | sudo pip3 install numpy |
 | matplotlib | latest | sudo pip3 install matplotlib |
+| PySide2 | latest | ... maybe sudo pip3 install PySide2 ...? Figure it out. |
 
 ### Installing Robinhood API
 1. Open a terminal 

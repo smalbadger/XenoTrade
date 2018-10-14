@@ -26,7 +26,7 @@ class StockListWidget(QWidget):
     def createElements(self):
         logging.debug("Creating the Stock List Widget elements")
         self.stockWidgets = []
-        for security in self.kernel.curUser.stocks(owned=True):
+        for security in self.kernel.curUser.getSecuritiesOwned():
             self.stockWidgets.append(StockWidget(security))
             
     def createLayout(self):

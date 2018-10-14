@@ -32,10 +32,10 @@ class XenoTradeGUI(QMainWindow):
         self.setCentralWidget(widget)
 
     def loadApplication(self):
-        if not self.kernel.curUser.verified:
+        if not self.kernel.curUser.getVerificationStatus():
             return
         else:
-            n = self.kernel.curUser.userName
+            n = self.kernel.curUser.getUserName()
             m = """
             Please be patient while we retrieve your information from Robinhood
             """
@@ -54,8 +54,8 @@ class XenoTradeGUI(QMainWindow):
             #######################################################################
             self.tempThread = QtCore.QThread()
             self.kernel.curUser.moveToThread(self.tempThread)
-            self.kernel.curUser.dataFetchFinished.connect(self.initDashboardGUI)
-            self.tempThread.started.connect(self.kernel.curUser.pullStocksFromRobinhood)
+            self.kernel.curUser.updateComplete.connect(self.initDashboardGUI)
+            self.tempThread.started.connect(self.kernel.curUser.update)
             self.tempThread.start()
 
 
@@ -74,7 +74,7 @@ class XenoTradeGUI(QMainWindow):
         try:
             err = self.kernel.curUser.logout()
             logging.error(err)
-        finally:
+        except:
             logging.error("No current user")
         sys.exit(0)
 
@@ -103,9 +103,9 @@ def setupLogging(args):
     if "--logging-level" in args:
         lvlStr = ""
         try:
-            idx = args.find("--logging-level")
+            idx = args.index("--logging-level")
             lvlStr = args[idx + 1]
-        finally:
+        except:
             print("USAGE: <python_interpreter> XenoTrade.py --logging-level <importance_level>")
             sys.exit(1)
         

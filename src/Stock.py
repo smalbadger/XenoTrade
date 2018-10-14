@@ -28,6 +28,14 @@ class Stock(XenoObject):
         self.popularity = self.trader.get_popularity(self.symbol())
         logging.info("New Stock object created: {}".format(self.symbol()))
 
+    def __hash__(self):
+        return self.symbol().__hash__()
+
+    def __eq__(self, other):
+        if self.symbol() == other.symbol():
+            return True
+        else:
+            return False
 
     def updateAllProperties(self):
         logging.info("Updating all {} Stock Object properties.".format(self.name()))

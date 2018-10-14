@@ -9,41 +9,30 @@ class XenoObject():
     def __init__(self):
         logging.debug("Initializing underlying Xeno Object")
         self.locks = {}
-        self.xeno_AddLock('readLock')
-        self.xeno_AddLock('writeLock')
     
-    def xeno_AddLock(self, name):
+    def addLock(self, name):
         logging.debug("Adding new lock to the the Xeno Object: {}".format(name))
         if name in self.locks:
             logging.warning("{} lock already exists.".format(name))
         self.locks[name] = Lock()
     
-    def xeno_Lock(self, name):
+    def acquireLock(self, name):
         logging.info("Acquiring the {} lock.".format(name))
         if name not in self.locks:
-            self.addLocks(name)   
+            logging.warning("{} lock does not exist. Creating a new lock and acquiring it.")
+            self.addLock(name)   
         self.locks[name].acquire()
         
-    def xeno_LockForReading(self):
-        logging.debug("Locking the XenoObject for reading.")
-        self.locks['writeLock'].acquire() # lock writing priviledges
+    def releaseLock(self, name):
+        logging.info("Releasing the {} lock.".format(name))
+        if name not in self.locks:
+            logging.error("{} lock does not exist, so it cannot be released. check your lock names")
+            return 
+        self.locks[name].release()
         
-    def xeno_LockForWriting(self):
-        logging.debug("Locking the XenoObject for writing.")
-        self.locks['readLock'].acquire() # lock reading priviledges
-        
-    def xeno_UnlockAll(self):
-        logging.debug("Unlocking all Xeno locks.")
+    def releaseAllLocks(self):
+        logging.info("Releasing all locks")
         for lock in self.locks:
-            if self.locks[lock].locked():
-                self.locks[lock].release()
-                    
-    def xeno_Unlock(self, name):
-        logging.debug("Unlocking Xeno lock: {}".format(name))
-        if name in self.locks:
-            if self.locks[name].locked():
-                self.locks[lock].release()
-        else:
-            logging.error('ERROR: {} lock does not exist.'.format(name))
-                 
+            self.releaseLock(lock)
+            
             

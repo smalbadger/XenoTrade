@@ -5,13 +5,16 @@ from distutils.dir_util import copy_tree
 
 import logging
 
+import GlobalSettings as GS
 from User import User
+from TaskManager import TaskManager
 
 class Kernel:
     def __init__(self, app, user=None):
         logging.info("Initializing the XenoTrade kernel")
         self.app = app
         self.currentUser = user
+        self.taskManager = TaskManager(GS.NUM_THREADS, GS.NUM_PROCESSES)
         self.baseDir     = os.getcwd().replace('\\','/')[:-3]
         self.usersDir    = self.baseDir + 'Users/'
         self.curUser     = None
@@ -21,6 +24,10 @@ class Kernel:
         
     def __str__(self):
         pass
+        
+    def getTaskManager(self):
+        return self.taskManager
+        
         
     ###########################################################################
     #####                           USER METHODS                          #####
@@ -68,27 +75,7 @@ class Kernel:
             logging.debug("{} was found".format(user))
             return True
         logging.debug("{} was not found".format(user))
-        
-        
-    ###########################################################################
-    #####                          STOCK METHODS                          #####
-    ###########################################################################
-    def getCurrentUserStocks(self):
-        pass
-        
-    ###########################################################################
-    #####                       CURRENCY METHODS                          #####
-    ###########################################################################
-    def getCurrentUserCurrencies(self):
-        pass
-        
-    ###########################################################################
-    #####                        SETTING METHODS                          #####
-    ###########################################################################
-    def getCurrentUserSettings(self):
-        pass
-        
-        
+
         
 if __name__ == '__main__':
     k = Kernel()

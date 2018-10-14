@@ -3,7 +3,11 @@
 # In-Depth Description of System Architecture
 
 # To-Do's
-* Create a XenoWidget abstract class that all custom widgets will inherit from. This class should:
-	* have an 'update' method to fetch data from the user object and spread it to internal widget components appropriately. This should also probably repaint the widget.
-* Concurrently fetch as much data as I can from the Robinhood servers. This will require quite a bit of experimentation and research. There also needs to be a simple and clean way to keep track of the threads and manage them (ThreadManager class maybe???).
-* record everything that happens during execution in a log. This will make debugging waaaaayyyyy easier hopefully.
+* Create an "updatable" abstract class or class template to standardize the way widgets are updated.
+* In the Task Manager class, record the history of the size of the work queues along with how long each task takes. It would be useful to show this information in a widget and allow the user to change parameters such as the number of threads running.
+* Create a queue of updatables and assign a thread that simply loops to update each object.
+* Clean up existing code - make everything standardized and modular
+* make templates for stuff.
+* make a nice loading screen animation with OpenGL
+* Figure out how to make separate packages or something so files can be divided up logically.
+* write some nice documentation

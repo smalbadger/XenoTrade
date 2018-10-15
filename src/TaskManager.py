@@ -85,6 +85,9 @@ class TaskManager(XenoObject):
         logging.debug("Getting number of unprocessed computation tasks")
         return self._computationWorkQueue.qsize()
         
+    def getNetworkTaskHistory():
+        return self._networkTaskHistory
+        
     ###############################################################################
     #                                SETTERS
     ###############################################################################
@@ -140,6 +143,7 @@ class TaskManager(XenoObject):
         newTask["callbackFn"] = callbackFn
         newTask["args"] = args
         newTask["kwargs"] = kwargs
+        newTask["start_time"] = time()
         self.getNetworkWorkQueue().put(newTask)
         if (self.getNumActiveThreads() < self.getNumThreads()):
             self.feedThreadPool()
@@ -159,10 +163,13 @@ class TaskManager(XenoObject):
     def onNetworkTaskCompleted(self, future):
         logging.debug("Network task completed.")
         self.acquireLock("onNetworkTaskCompleted")
+        print(future.result())
         self.setNumActiveThreads(self.getNumActiveThreads()-1)
         if (self.getNumActiveThreads() < self.getNumThreads()):
             self.feedThreadPool()
         self._waitingTasks[future]["callbackFn"](future)
+        self._waitingTasks[future]["end_time"] = time()
+        self._getNetworkTaskHistory().append(self._waitingTasks[future])
         del self._waitingTasks[future]
         self.releaseLock("onNetworkTaskCompleted")
            

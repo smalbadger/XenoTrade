@@ -32,10 +32,10 @@ class XenoTradeGUI(QMainWindow):
         self.setCentralWidget(widget)
 
     def loadApplication(self):
-        if not self.kernel.curUser.getVerificationStatus():
+        if not self.kernel.getCurrentUser().getVerificationStatus():
             return
         else:
-            n = self.kernel.curUser.getUserName()
+            n = self.kernel.getCurrentUser().getUserName()
             m = """
             Please be patient while we retrieve your information from Robinhood
             """
@@ -53,9 +53,9 @@ class XenoTradeGUI(QMainWindow):
             # information is being pulled, a loading screen is shown.             #
             #######################################################################
             self.tempThread = QtCore.QThread()
-            self.kernel.curUser.moveToThread(self.tempThread)
-            self.kernel.curUser.updateComplete.connect(self.initDashboardGUI)
-            self.tempThread.started.connect(self.kernel.curUser.update)
+            self.kernel.getCurrentUser().moveToThread(self.tempThread)
+            self.kernel.getCurrentUser().updateComplete.connect(self.initDashboardGUI)
+            self.tempThread.started.connect(self.kernel.getCurrentUser().update)
             self.tempThread.start()
 
 
@@ -68,11 +68,11 @@ class XenoTradeGUI(QMainWindow):
         self.setCentralWidget(widget)
         
     def closeEvent(self, event):
-        if self.kernel.curUser == None:
+        if self.kernel.getCurrentUser() == None:
             sys.exit(0)
             
         try:
-            err = self.kernel.curUser.logout()
+            err = self.kernel.getCurrentUser().logout()
             logging.error(err)
         except:
             logging.error("No current user")

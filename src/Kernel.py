@@ -1,23 +1,32 @@
+'''
+Class:      Kernel
+Author:     Sam Badger
+Date:       October 15, 2018
+Description:
+            The Kernel is the core of XenoTrade (I don't actually know what a "kernel" is, but the 
+            name sounded right). It links the main components of the XenoTrade architecture while
+            providing a simple way to access data from most other parts of the architecture.
+'''
+
+
 import os
-import time
-from datetime import datetime
 from distutils.dir_util import copy_tree
 
 import logging
 
 import GlobalSettings as GS
+from XenoObject import XenoObject
 from User import User
 from TaskManager import TaskManager
 
-class Kernel:
+class Kernel(XenoObject):
     def __init__(self, app, user=None):
         logging.info("Initializing the XenoTrade kernel")
-        self.app = app
-        self.currentUser = user
-        self.taskManager = TaskManager(GS.NUM_THREADS, GS.NUM_PROCESSES)
-        self.baseDir     = os.getcwd().replace('\\','/')[:-3]
-        self.usersDir    = self.baseDir + 'Users/'
-        self.curUser     = None
+        XenoObject.__init__()
+
+        self.setApp(app)
+        self.setCurrentUser(user)
+        self.setTaskManager(TaskManager(GS.NUM_THREADS, GS.NUM_PROCESSES))
         
     def __del__(self):
         pass
@@ -27,33 +36,60 @@ class Kernel:
         
     def getTaskManager(self):
         return self.taskManager
+    
+    ###############################################################################
+    #                                GETTERS
+    ###############################################################################
+    def getApp(self):
+        return self._app
         
+    def getCurrentUser(self):
+        return self._currentUser
         
-    ###########################################################################
-    #####                           USER METHODS                          #####
-    ###########################################################################
-    def switchUser(self, username, password):
-        logging.info("Attempting to switch user to {}.".format(username))
-        newUser = User(self, self.usersDir + username + '/')
-        if newUser.verify(password):
-            self.curUser = newUser
-            logging.info("Current user: {}".format(self.curUser))
-            return True
-        else:
-            logging.info("Current user: {}".format(self.curUser))
-            return False
+    def getTaskManager(self):
+        return self._taskManager
+        
+    def getBaseDir(self):
+        return os.getcwd().replace('\\','/')[:-3]
+        
+    def getUsersDir(self):
+        return self.getBaseDir() + 'Users/'
         
     def getAllUsers(self):
         logging.debug("Getting a list of all users on this machine.")
-        users = os.listdir(self.baseDir + 'Users/')
+        users = os.listdir(self.getUsersDir())
         users.remove('.__template__')
         if users == None:
             users = []
         return users
+    
+    ###############################################################################
+    #                                SETTERS
+    ###############################################################################
+    def setApp(self, app):
+        logging.debug("Setting the kernel's application.")
+        self._app = app
         
-    def currentUser(self):
-        logging.debug("Fetching the current user")
-        return self.curUser
+    def setCurrentUser(self, user):
+        logging.info("Setting the kernel's current user.")
+        self._currentUser = user
+        
+    def setTaskManager(self, taskManager):
+        self.debug("Setting the kernel's task manager.")
+        self._taskManager = taskManager
+        
+        
+    ###########################################################################
+    #####                      USER MANAGEMENT METHODS
+    ###########################################################################
+    def switchUser(self, username, password):
+        logging.info("Attempting to switch user to {}.".format(username))
+        newUser = User(self, self.getUsersDir() + username + '/')
+        if newUser.verify(password):
+            self.setCurrentUser(newUser)
+        logging.info("Current user: {}".format(self.getCurrentUser()))
+        return self.getCurrentUser() == newUser
+        
     
     def addUser(self, username, password):
         logging.info("Attempting to add user {}.".format(username))
@@ -62,8 +98,8 @@ class Kernel:
             logging.error(err)
             return err
         else:
-            template = self.usersDir + '.__template__/'
-            newUserDir = self.usersDir + username + '/'
+            template = self.getUsersDir() + '.__template__/'
+            newUserDir = self.getUsersDir() + username + '/'
             os.mkdir(newUserDir)
             copy_tree(template, newUserDir)
             logging.info("User {} was successfully created".format(username))
@@ -76,9 +112,12 @@ class Kernel:
             return True
         logging.debug("{} was not found".format(user))
 
-        
 if __name__ == '__main__':
     k = Kernel()
     print("-------------------------- KERNEL PROPERTIES --------------------------")
-    print("baseDir: {}".format(k.baseDir))
-    print("getAllUsers: {}".format(k.getAllUsers()))
+    print("baseDir:      {}".format(k.getBaseDir()))
+    print("usersDir:     {}".format(k.getUsersDir()))
+    print("App:          {}".format(k.getApp()))
+    print("curUser:      {}".format(k.getCurrentUser()))
+    print("task manager: {}".format(k.getTaskManager()))
+    print("getAllUsers:  {}".format(k.getAllUsers()))

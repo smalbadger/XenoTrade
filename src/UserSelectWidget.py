@@ -29,7 +29,7 @@ class UserSelectWidget(QWidget):
         logging.debug("Initializing the login widget's sub-widgets")
         self.userButtons = [UserTile(u, self) for u in self.kernel.getAllUsers()]
         for b, u in zip(self.userButtons, self.kernel.getAllUsers()):
-            b.setProfilePicture(self.kernel.usersDir+u+'/profile/profile_pic.png')
+            b.setProfilePicture(self.kernel.getUsersDir()+u+'/profile/profile_pic.png')
             b.createLayout()
             
         self.newUserButton = QPushButton('New User')

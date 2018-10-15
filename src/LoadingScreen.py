@@ -103,7 +103,7 @@ class LoadingScreen(QGroupBox):
                 self.loadingSquares[(k % 8) - 1].setStyleSheet("background-color: purple")
                 self.loadingSquares[(k % 8) - 1].repaint()
 
-                self.kernel.app.processEvents()
+                self.kernel.getApp().processEvents()
                 i += 1
             j += 1
         self.running = False

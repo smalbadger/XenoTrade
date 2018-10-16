@@ -8,21 +8,17 @@ Description:
 
 import logging
 from time import sleep, time
-from concurrent.futures import ThreadPoolExecutor
 
-from PySide2.QtCore import QObject, Signal
-
-import GlobalSettings as GS
 from Stock      import Stock
 from Robinhood  import Robinhood
 from XenoObject import XenoObject
+from Updatable  import Updatable
 
-class User(QObject, XenoObject):
-    updateComplete = Signal()   #emit this signal when an update is done.
+class User(Updatable, XenoObject):
 
     def __init__(self, kernel, directory):
         logging.info("Creating User Object")
-        QObject.__init__(self)
+        Updatable.__init__(self)
         XenoObject.__init__(self)
         
         self.setKernel(kernel)
@@ -31,7 +27,8 @@ class User(QObject, XenoObject):
         self.setUserName(directory=directory)
         self.setVerificationStatus(False)
         self.setSecuritiesOwned(set())
-        self.setLastUpdateTime(None)
+        
+        self.addUpdateFunction(self.updateSecuritiesOwned)
 
     def __del__(self):
         logging.info("Deleting User Object")
@@ -73,8 +70,6 @@ class User(QObject, XenoObject):
     def getTaskManager(self):
         return self.getKernel().getTaskManager()
         
-    def getLastUpdateTime(self):
-        return self._lastUpdateTime
         
     ###############################################################################
     #                               SETTERS
@@ -110,10 +105,6 @@ class User(QObject, XenoObject):
     def setSecuritiesOwned(self, securities):
         logging.debug("Setting the user's securities owned")
         self._securitiesOwned = securities
-            
-    def setLastUpdateTime(self, time):
-        logging.debug("Setting the user's last update time")
-        self._lastUpdateTime = time
         
     ###############################################################################
     #                           LOG CURRENT USER OUT
@@ -160,25 +151,6 @@ class User(QObject, XenoObject):
     ###############################################################################
     #                              UPDATE METHODS
     ###############################################################################
-    def update(self):
-        """
-            Update the object if it either hasn't been updated yet, or if it hasn't been 
-            updated recently. Return True if updated and False otherwise.
-        """
-        logging.info("Updating {}.".format(self.getUserName()))
-        shouldUpdate = False
-        if (self.getLastUpdateTime() == None):
-            shouldUpdate = True
-        elif(time() - self.getLastUpdateTime() > GS.UPDATE_FREQUENCY):
-            shouldUpdate = True
-            
-        if shouldUpdate:
-            self.setLastUpdateTime(time())
-            self.updateSecuritiesOwned()
-        
-        self.updateComplete.emit()    
-        return shouldUpdate
-
     def updateSecuritiesOwned(self):
         """
             retrieve a summary of all securities owned. then iterate through the summary and
@@ -192,7 +164,7 @@ class User(QObject, XenoObject):
         for i in range(len(ownedSummary)):
             tm.addNetworkTask(Stock, self.updateSecuritiesOwned_CALLBACK, t, pos=ownedSummary[i])
             
-        sleep(20) #remove this later
+        sleep(10) #remove this later
         
     def updateSecuritiesOwned_CALLBACK(self, future):
         """

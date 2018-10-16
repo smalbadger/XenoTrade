@@ -7,8 +7,6 @@ Description:
             name sounded right). It links the main components of the XenoTrade architecture while
             providing a simple way to access data from most other parts of the architecture.
 '''
-
-
 import os
 from distutils.dir_util import copy_tree
 
@@ -22,7 +20,7 @@ from TaskManager import TaskManager
 class Kernel(XenoObject):
     def __init__(self, app, user=None):
         logging.info("Initializing the XenoTrade kernel")
-        XenoObject.__init__()
+        XenoObject.__init__(self)
 
         self.setApp(app)
         self.setCurrentUser(user)
@@ -75,7 +73,7 @@ class Kernel(XenoObject):
         self._currentUser = user
         
     def setTaskManager(self, taskManager):
-        self.debug("Setting the kernel's task manager.")
+        logging.debug("Setting the kernel's task manager.")
         self._taskManager = taskManager
         
         

@@ -17,6 +17,7 @@ Once XenoTrade is stable and well developed, the next goal is to incorporate a t
 | numpy | latest | sudo pip3 install numpy |
 | matplotlib | latest | sudo pip3 install matplotlib |
 | PySide2 | latest | ... maybe sudo pip3 install PySide2 ...? Figure it out. |
+NOTE: If you're having problems with multiple Qt binaries, anaconda may be the cause if you have it.
 
 ### Installing Robinhood API
 1. Open a terminal 

@@ -11,11 +11,11 @@ from time import sleep
 
 import logging
 
-from Kernel           import Kernel
-from UserSelectWidget import UserSelectWidget
-from DashboardWidget  import DashboardWidget
-from StockListWidget  import StockListWidget
-from LoadingScreen    import LoadingScreen
+from Kernel              import Kernel
+from UserSelectWidget    import UserSelectWidget
+from DashboardWidget     import DashboardWidget
+from StockListWidget     import StockListWidget
+from LoadingScreenWidget import LoadingScreenWidget
 
 class XenoTradeGUI(QMainWindow):
     def __init__(self, kernel, parent=None):
@@ -40,7 +40,7 @@ class XenoTradeGUI(QMainWindow):
             Please be patient while we retrieve your information from Robinhood
             """
             p = self
-            self.loadWidget = LoadingScreen(self.kernel, username=n, message=m)
+            self.loadWidget = LoadingScreenWidget(self.kernel, username=n, message=m)
             self.setCentralWidget(self.loadWidget)
             self.animateThread = QtCore.QThread()
             self.animateThread.started.connect(self.loadWidget.startAnimation)

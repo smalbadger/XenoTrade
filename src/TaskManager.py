@@ -14,6 +14,7 @@ from pprint import pprint
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import ProcessPoolExecutor
+from time import time
 
 from XenoObject import XenoObject
 
@@ -33,6 +34,7 @@ class TaskManager(XenoObject):
         self.setNumActiveProcesses(0)
         self.resetThreadPool()
         self.resetProcessPool()
+        self.resetNetworkTaskHistory()
         
         self._waitingTasks = {} # PRIVATE
 
@@ -85,7 +87,8 @@ class TaskManager(XenoObject):
         logging.debug("Getting number of unprocessed computation tasks")
         return self._computationWorkQueue.qsize()
         
-    def getNetworkTaskHistory():
+    def getNetworkTaskHistory(self):
+        logging.debug("Getting network task history")
         return self._networkTaskHistory
         
     ###############################################################################
@@ -130,6 +133,10 @@ class TaskManager(XenoObject):
         if self.getProcessPool():
             self.getProcessPool().shutdown()
         self._processPool = ProcessPoolExecutor(max_workers=self.getNumProcesses())
+        
+    def resetNetworkTaskHistory(self):
+        logging.info("Resetting the network task history")
+        self._networkTaskHistory = []
     
     ###############################################################################
     #                          NETWORK TASK FUNCTIONAL METHODS
@@ -163,20 +170,19 @@ class TaskManager(XenoObject):
     def onNetworkTaskCompleted(self, future):
         logging.debug("Network task completed.")
         self.acquireLock("onNetworkTaskCompleted")
-        print(future.result())
         self.setNumActiveThreads(self.getNumActiveThreads()-1)
         if (self.getNumActiveThreads() < self.getNumThreads()):
             self.feedThreadPool()
         self._waitingTasks[future]["callbackFn"](future)
         self._waitingTasks[future]["end_time"] = time()
-        self._getNetworkTaskHistory().append(self._waitingTasks[future])
+        self.getNetworkTaskHistory().append(self._waitingTasks[future])
         del self._waitingTasks[future]
         self.releaseLock("onNetworkTaskCompleted")
            
     ###############################################################################
     #                          COMPUTATION TASK FUNCTIONAL METHODS
     ###############################################################################
-    # This methods are untested and most likely will not work if you use it, so don't.
+    # This methods are untested and most likely will not work if you use them, so don't.
     
     def addComputationTask(self, targetFn, callbackFn, *args, **kwargs):
         # Note: only "Picklable" objects can be handed off to a process.

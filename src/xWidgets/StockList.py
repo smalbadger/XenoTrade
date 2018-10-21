@@ -1,19 +1,20 @@
+import logging
+
 from PySide2.QtWidgets import QPushButton
 from PySide2.QtWidgets import QHBoxLayout
 from PySide2.QtWidgets import QVBoxLayout
 from PySide2.QtWidgets import QWidget
 from PySide2.QtWidgets import QLabel
 
-import logging
+from xWidgets.Stock import Stock
+from xCore.abstract.Updatable import Updatable
 
-from Stock import Stock
-from StockWidget import StockWidget
-
-class StockListWidget(QWidget):
+class StockList(QWidget, Updatable):
     def __init__(self, kernel, parent=None):
-        super(StockListWidget, self).__init__(parent)
+        super(StockList, self).__init__(parent)
         logging.info("Creating the Stock List Widget")
         self.kernel = kernel
+        self.kernel.updateManager().addParent
         self.parent = parent
         self.initUI()
         

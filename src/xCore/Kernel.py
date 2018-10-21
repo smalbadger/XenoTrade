@@ -8,14 +8,14 @@ Description:
             providing a simple way to access data from most other parts of the architecture.
 '''
 import os
+import logging
 from distutils.dir_util import copy_tree
 
-import logging
-
-import GlobalSettings as GS
-from XenoObject import XenoObject
-from User import User
-from TaskManager import TaskManager
+import xCore.GlobalSettings as GS
+from xCore.User import User
+from xCore.TaskManager import TaskManager
+from xCore.UpdateManager import UpdateManager
+from xCore.abstract import XenoObject
 
 class Kernel(XenoObject):
     def __init__(self, app, user=None):
@@ -24,7 +24,8 @@ class Kernel(XenoObject):
 
         self.setApp(app)
         self.setCurrentUser(user)
-        self.setTaskManager(TaskManager(GS.NUM_THREADS, GS.NUM_PROCESSES))
+        self.setTaskManager(TaskManager(self, GS.NUM_THREADS, GS.NUM_PROCESSES))
+        self.setUpdateManager(UpdateManager(self))
         
     def __del__(self):
         pass
@@ -46,6 +47,9 @@ class Kernel(XenoObject):
         
     def getTaskManager(self):
         return self._taskManager
+        
+    def getUpdateManager(self):
+        return self._updateManager
         
     def getBaseDir(self):
         return os.getcwd().replace('\\','/')[:-3]
@@ -75,6 +79,10 @@ class Kernel(XenoObject):
     def setTaskManager(self, taskManager):
         logging.debug("Setting the kernel's task manager.")
         self._taskManager = taskManager
+        
+    def setUpdateManager(self, updateManager):
+        logging.debug("Setting the kernel's update manager.")
+        self._updateManager = updateManager
         
         
     ###########################################################################

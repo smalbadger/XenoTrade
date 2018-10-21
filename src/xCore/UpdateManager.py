@@ -19,17 +19,16 @@ How it works:
             of the root nodes and perform a breadth-first search where we update a nodes children if
             and only if the node has been updated.
 '''
-
-import logging
 import queue
+import logging
 
-import XenoObject
-
+from xCore.abstract.XenoObject import XenoObject
 
 class UpdateManager(XenoObject):
-    def __init__(self):
+    def __init__(self, kernel):
         XenoObject.__init__(self)
         
+        self.setKernel(kernel)
         self.resetUpdateGraph()
 
     def __del__(self):
@@ -48,6 +47,10 @@ class UpdateManager(XenoObject):
     def getRunStatus(self):
         logging.debug("Getting run status")
         return self._runStatus
+        
+    def setKernel(self):
+        logging.debug("Getting the UpdateManager's kernel")
+        return self._kernel
     
     ###############################################################################
     #                                SETTERS
@@ -68,6 +71,10 @@ class UpdateManager(XenoObject):
     def setRunStatus(self, status):
         logging.debug("Setting run status: {}".format(status))
         self._runStatus = status
+        
+    def setKernel(self, kernel):
+        logging.debug("Setting the UpdateManager's kernel")
+        self._kernel = kernel
     
     ###############################################################################
     #                           FUNCTIONAL METHODS
@@ -79,7 +86,7 @@ class UpdateManager(XenoObject):
         while(self.getRunStatus()):
             for node in self.getUpdateGraph():
                 workQueue.put(node)
-            while !workQueue.empty():
+            while not workQueue.empty():
                 node = workQueue.get()
                 updated = node.update()
                 if updated:

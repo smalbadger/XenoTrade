@@ -9,10 +9,10 @@ Description:
 import logging
 from time import sleep, time
 
-from Stock      import Stock
-from Robinhood  import Robinhood
-from XenoObject import XenoObject
-from Updatable  import Updatable
+from Robinhood import Robinhood
+
+from xCore.Stock import Stock
+from xCore.abstract import Updatable, XenoObject
 
 class User(Updatable, XenoObject):
 
@@ -29,6 +29,8 @@ class User(Updatable, XenoObject):
         self.setSecuritiesOwned(set())
         
         self.addUpdateFunction(self.updateSecuritiesOwned)
+        
+        self.getKernel().getUpdateManager().addUpdatable(self)
 
     def __del__(self):
         logging.info("Deleting User Object")
@@ -163,7 +165,7 @@ class User(Updatable, XenoObject):
         for i in range(len(ownedSummary)):
             tm.addNetworkTask(Stock, self.updateSecuritiesOwned_CALLBACK, t, pos=ownedSummary[i])
             
-        sleep(10) #remove this later
+        #sleep(10) #remove this later
         
     def updateSecuritiesOwned_CALLBACK(self, future):
         """

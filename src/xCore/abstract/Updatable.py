@@ -39,7 +39,7 @@ class Updatable(QObject):
     updateComplete = Signal()   #emit this signal when an update is done.
     
     def __init__(self, frequency=None):
-        QObject.__init__(self)
+        super(Updatable, self).__init__()
         self.setUpdateFunctionList([])
         self.setUpdateFrequency(frequency)
         self.setLastUpdateTime(None)
@@ -101,13 +101,11 @@ class Updatable(QObject):
     ###############################################################################
     #                                FUNCTIONAL METHODS
     ###############################################################################
-    def update(self):
+    def runUpdates(self):
         """
             Update the object if it either hasn't been updated yet, or if it hasn't been 
             updated recently. Return True if updated and False otherwise.
         """
-        logging.info("--- Running the subclass-defined update functions ---.")
-        logging.debug("Checking if we should update this time.")
         shouldUpdate = False
         if (self.getLastUpdateTime() == None):
             shouldUpdate = True

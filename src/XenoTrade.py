@@ -56,16 +56,20 @@ class XenoTradeGUI(QMainWindow):
             self.tempThread.start()
             '''
             
+            '''
             t = QtCore.QThread()
             self.kernel.getUpdateManager().moveToThread(t)
             t.started.connect(self.kernel.getUpdateManager().updateAllUpdatables)
             t.start()
-
+            '''
+            
+            self.kernel.getUpdateManager().start()
+            self.initDashboardGUI()
 
     def initDashboardGUI(self):
         #self.tempThread.quit()
-        self.loadWidget.stopAnimation()
-        self.animateThread.quit()
+        #self.loadWidget.stopAnimation()
+        #self.animateThread.quit()
 
         widget = Dashboard(kernel, self)
         self.setCentralWidget(widget)

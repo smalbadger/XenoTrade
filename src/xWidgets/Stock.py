@@ -97,9 +97,11 @@ class Stock(QGroupBox):
         self.price.setObjectName("stock_price")
         self.percentChange.setObjectName("stock_percent_change")
         
-    def update(self):
-        logging.debug("updating the stock widget")
-        self.updateStyle()
+    '''
+    def updateData(self):
+        logging.debug("Updating stock widget's data")
+        self.name.setText("")
+    '''
         
     def updateStyle(self):
         logging.debug("updating the stock widget's style")

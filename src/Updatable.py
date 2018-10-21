@@ -6,6 +6,7 @@ Type:       ABSTRACT
 Description:
             This class should be inherited by all objects that need to be in XenoTrade's update loop
             such as widgets and user.
+            
 How To Use:
             Look at the User class for an example of how this class is used. Notice that the User
             class inherits from the Updatable class. Next, you should notice the call to
@@ -14,6 +15,16 @@ How To Use:
             Inheriting from this class allows your class to be put in the main update loop of
             XenoTrade which will call the update function in this class. The update function in this
             class will call all of the functions that the subclass has specified.
+            
+            It is your responsibility to appropriately add your updatable object to the Update
+            Manager. To do this, think about where your updatable gets its data from. Is it another
+            updatable? If so, you should set ALL updatables that your updatable depends on to be 
+            the parents of your updatable. Once this is done, call addUpdatable on the Update
+            Manager and pass in your new updatable object.
+            
+Why parents and children?
+            To find out more about this, please see the UpdateManager documentation.
+            
 '''
 
 from time import time
@@ -32,6 +43,8 @@ class Updatable(QObject):
         self.setUpdateFunctionList([])
         self.setUpdateFrequency(frequency)
         self.setLastUpdateTime(None)
+        self.resetParents()
+        self.resetChildren()
         
     ###############################################################################
     #                                GETTERS
@@ -45,9 +58,21 @@ class Updatable(QObject):
     def getUpdateFrequency(self):
         return self._updateFrequency
         
+    def getParents(self):
+        return self._parents
+        
+    def getChildren(self):
+        return self._children
+        
     ###############################################################################
     #                                SETTERS
     ############################################################################### 
+    def resetParents(self):
+        self._parents = []
+        
+    def resetChildren(self):
+        self._children = []
+    
     def setLastUpdateTime(self, t):
         logging.debug("Setting the last update time: {}".format(t))
         self._lastUpdateTime = t
@@ -66,6 +91,12 @@ class Updatable(QObject):
     def addUpdateFunction(self, Fn, *args, **kwargs):
         logging.debug("Adding new function to update function list: {}".format(Fn))
         self.getUpdateFunctionList().append((Fn, args, kwargs))
+        
+    def addParent(self, parent):
+        self.getParents().append(parent)
+        
+    def addChild(self, child):
+        self.getChildren().append(child)
         
     ###############################################################################
     #                                FUNCTIONAL METHODS

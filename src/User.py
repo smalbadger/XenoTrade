@@ -32,7 +32,6 @@ class User(Updatable, XenoObject):
 
     def __del__(self):
         logging.info("Deleting User Object")
-        self.releaseAllLocks()
         try:
             self.getTrader().logout()
             self.setVerificationStatus(False)

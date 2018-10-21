@@ -36,7 +36,7 @@ class Dashboard(QWidget):
     def createElements(self):
         logging.debug("Creating the Dashboard's elements.")
         self.scrollArea = QScrollArea()
-        self.stockListWidget = StockListWidget(self.kernel)
+        self.stockListWidget = StockList(self.kernel)
             
     def createLayout(self):
         logging.debug("Creating the Dashboard's layout.")

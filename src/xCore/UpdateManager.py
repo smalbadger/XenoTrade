@@ -22,10 +22,13 @@ How it works:
 import queue
 import logging
 
+from PySide2.QtCore import QThread
+
 from xCore.abstract.XenoObject import XenoObject
 
-class UpdateManager(XenoObject):
+class UpdateManager(QThread, XenoObject):
     def __init__(self, kernel):
+        QThread.__init__(self)
         XenoObject.__init__(self)
         
         self.setKernel(kernel)
@@ -79,7 +82,7 @@ class UpdateManager(XenoObject):
     ###############################################################################
     #                           FUNCTIONAL METHODS
     ###############################################################################
-    def updateAllUpdatables(self):
+    def run(self):
         logging.debug("Updating all updatables... (continuous)")
         self.setRunStatus(True)
         workQueue = queue.Queue()    
@@ -88,7 +91,7 @@ class UpdateManager(XenoObject):
                 workQueue.put(node)
             while not workQueue.empty():
                 node = workQueue.get()
-                updated = node.update()
+                updated = node.runUpdates()
                 if updated:
                     for child in node.children():
                         workQueue.put(child)

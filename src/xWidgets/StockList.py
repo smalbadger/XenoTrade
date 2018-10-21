@@ -9,13 +9,16 @@ from PySide2.QtWidgets import QLabel
 from xWidgets.Stock import Stock
 from xCore.abstract.Updatable import Updatable
 
-class StockList(QWidget, Updatable):
-    def __init__(self, kernel, parent=None):
-        super(StockList, self).__init__(parent)
+import time
+
+class StockList(Updatable, QWidget):
+    def __init__(self, kernel):
+        super(StockList, self).__init__()
         logging.info("Creating the Stock List Widget")
         self.kernel = kernel
-        self.kernel.updateManager().addParent
-        self.parent = parent
+        self.addParent(self.kernel.getCurrentUser())
+        self.addUpdateFunction(self.updateStockWidgets)
+        self.addUpdateFunction(self.update)
         self.initUI()
         
     def initUI(self):
@@ -40,3 +43,8 @@ class StockList(QWidget, Updatable):
     def createActions(self):
         logging.debug("Connecting the Stock List Widget's signals and slots.")
         pass
+         
+    def updateStockWidgets(self):
+        logging.debug("CHANGE THIS -- ONLY FOR TESTING -- GETTING NEW STOCKS")
+        self.createElements()
+            

@@ -9,23 +9,23 @@ Description:
             Tasks are sent to a thread pool, whereas computing tasks are sent to a process pool.
 '''
 import logging
+from time import time
 from queue import Queue
 from pprint import pprint
 from datetime import datetime
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import ProcessPoolExecutor
-from time import time
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
-from XenoObject import XenoObject
+from xCore.abstract.XenoObject import XenoObject
 
 class TaskManager(XenoObject):
-    def __init__(self, numThreads=10, numProcesses=5):
+    def __init__(self, kernel, numThreads=10, numProcesses=5):
         logging.debug("Initializing Task Manager")
         XenoObject.__init__(self)
         
         self._threadPool = None
         self._processPool = None
         
+        self.setKernel(kernel)
         self.setNetworkWorkQueue(Queue())
         self.setComputationWorkQueue(Queue())
         self.setNumThreads(numThreads)
@@ -36,7 +36,7 @@ class TaskManager(XenoObject):
         self.resetProcessPool()
         self.resetNetworkTaskHistory()
         
-        self._waitingTasks = {} # PRIVATE
+        self._waitingTasks = {} # PRIVATE- don't touch this (that's why there's no setter or getter)
 
     def __del__(self):
         pass
@@ -47,6 +47,10 @@ class TaskManager(XenoObject):
     ###############################################################################
     #                                GETTERS
     ###############################################################################
+    def getKernel(self):
+        logging.debug("Getting the TaskManager's kernel")
+        return self._kernel
+    
     def getNumActiveThreads(self):
         logging.debug("Getting number of active threads")
         return self._activeThreadCounter
@@ -94,6 +98,10 @@ class TaskManager(XenoObject):
     ###############################################################################
     #                                SETTERS
     ###############################################################################
+    def setKernel(self, kernel):
+        logging.debug("Setting the TaskManager's kernel")
+        self._kernel = kernel
+    
     def setNumActiveThreads(self, num):
         logging.debug("Setting number of active threads: " + str(num))
         self._activeThreadCounter = num

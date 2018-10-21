@@ -11,8 +11,8 @@ Description:
 # <Python imports>
 # <external library imports>
 
-from XenoObject import XenoObject
-from Updatable import Updatable
+from xCore.abstract.XenoObject import XenoObject
+from xCore.abstract.Updatable import Updatable
 
 
 class Widget(XenoObject, Updatable):

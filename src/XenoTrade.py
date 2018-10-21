@@ -1,21 +1,15 @@
-from PySide2 import QtCore
-from PySide2 import QtGui
-
-from PySide2.QtWidgets import QApplication
-from PySide2.QtWidgets import QMainWindow
-from PySide2.QtGui	   import QPalette
-
+import logging
 import sys
 import os
 from time import sleep
 
-import logging
+from PySide2 import QtGui
+from PySide2 import QtCore
+from PySide2.QtWidgets import QApplication, QMainWindow
+from PySide2.QtGui import QPalette
 
-from Kernel              import Kernel
-from UserSelectWidget    import UserSelectWidget
-from DashboardWidget     import DashboardWidget
-from StockListWidget     import StockListWidget
-from LoadingScreenWidget import LoadingScreenWidget
+from xCore import Kernel
+from xWidgets import UserSelect, Dashboard, LoadingScreen
 
 class XenoTradeGUI(QMainWindow):
     def __init__(self, kernel, parent=None):
@@ -28,7 +22,7 @@ class XenoTradeGUI(QMainWindow):
         self.initLoginGUI()
 
     def initLoginGUI(self):
-        widget = UserSelectWidget(kernel, self)
+        widget = UserSelect(kernel, self)
         self.setCentralWidget(widget)
 
     def loadApplication(self):
@@ -39,12 +33,14 @@ class XenoTradeGUI(QMainWindow):
             m = """
             Please be patient while we retrieve your information from Robinhood
             """
+            '''
             p = self
-            self.loadWidget = LoadingScreenWidget(self.kernel, username=n, message=m)
+            self.loadWidget = LoadingScreen(self.kernel, username=n, message=m)
             self.setCentralWidget(self.loadWidget)
             self.animateThread = QtCore.QThread()
             self.animateThread.started.connect(self.loadWidget.startAnimation)
             self.animateThread.start()
+            '''
 
             #######################################################################
             # This section of code moves the user object to another thread, pulls #
@@ -52,19 +48,26 @@ class XenoTradeGUI(QMainWindow):
             # a while), and then loads the dashboard GUI. While the stock         #
             # information is being pulled, a loading screen is shown.             #
             #######################################################################
+            '''
             self.tempThread = QtCore.QThread()
             self.kernel.getCurrentUser().moveToThread(self.tempThread)
             self.kernel.getCurrentUser().updateComplete.connect(self.initDashboardGUI)
             self.tempThread.started.connect(self.kernel.getCurrentUser().update)
             self.tempThread.start()
+            '''
+            
+            t = QtCore.QThread()
+            self.kernel.getUpdateManager().moveToThread(t)
+            t.started.connect(self.kernel.getUpdateManager().updateAllUpdatables)
+            t.start()
 
 
     def initDashboardGUI(self):
-        self.tempThread.quit()
+        #self.tempThread.quit()
         self.loadWidget.stopAnimation()
         self.animateThread.quit()
 
-        widget = DashboardWidget(kernel, self)
+        widget = Dashboard(kernel, self)
         self.setCentralWidget(widget)
         
     def closeEvent(self, event):
@@ -83,20 +86,20 @@ class XenoTradeGUI(QMainWindow):
 def setAppStyle(app):
     logging.info("Setting application style")
     app.setStyle('Fusion')
-    palette = QtGui.QPalette()
-    palette.setColor(QtGui.QPalette.Window, QtGui.QColor(53,53,53))
-    palette.setColor(QtGui.QPalette.WindowText, QtCore.Qt.white)
-    palette.setColor(QtGui.QPalette.Base, QtGui.QColor(15,15,15))
-    palette.setColor(QtGui.QPalette.AlternateBase, QtGui.QColor(53,53,53))
-    palette.setColor(QtGui.QPalette.ToolTipBase, QtCore.Qt.white)
-    palette.setColor(QtGui.QPalette.ToolTipText, QtCore.Qt.white)
-    palette.setColor(QtGui.QPalette.Text, QtCore.Qt.white)
-    palette.setColor(QtGui.QPalette.Button, QtGui.QColor(53,53,53))
-    palette.setColor(QtGui.QPalette.ButtonText, QtCore.Qt.white)
-    palette.setColor(QtGui.QPalette.BrightText, QtCore.Qt.red)
+    palette = QPalette()
+    palette.setColor(QPalette.Window, QtGui.QColor(53,53,53))
+    palette.setColor(QPalette.WindowText, QtCore.Qt.white)
+    palette.setColor(QPalette.Base, QtGui.QColor(15,15,15))
+    palette.setColor(QPalette.AlternateBase, QtGui.QColor(53,53,53))
+    palette.setColor(QPalette.ToolTipBase, QtCore.Qt.white)
+    palette.setColor(QPalette.ToolTipText, QtCore.Qt.white)
+    palette.setColor(QPalette.Text, QtCore.Qt.white)
+    palette.setColor(QPalette.Button, QtGui.QColor(53,53,53))
+    palette.setColor(QPalette.ButtonText, QtCore.Qt.white)
+    palette.setColor(QPalette.BrightText, QtCore.Qt.red)
 
-    palette.setColor(QtGui.QPalette.Highlight, QtGui.QColor(142,45,197).lighter())
-    palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
+    palette.setColor(QPalette.Highlight, QtGui.QColor(142,45,197).lighter())
+    palette.setColor(QPalette.HighlightedText, QtCore.Qt.black)
     app.setPalette(palette)
 
 def setupLogging(args):

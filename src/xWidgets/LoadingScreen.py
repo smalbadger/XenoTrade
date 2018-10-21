@@ -16,9 +16,9 @@ from PySide2.QtWidgets import QGroupBox
 from time import sleep
 import logging
 
-class LoadingScreenWidget(QGroupBox):
+class LoadingScreen(QGroupBox):
     def __init__(self, kernel, username=None, message=None, parent=None):
-        super(LoadingScreenWidget, self).__init__()
+        super(LoadingScreen, self).__init__()
         logging.info("Initializing the loading screen")
         self.kernel = kernel
         self.name = username

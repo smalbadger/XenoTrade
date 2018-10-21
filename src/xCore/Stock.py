@@ -2,7 +2,7 @@ from datetime import datetime as dt
 from pprint import pprint
 import logging
 
-from XenoObject import XenoObject
+from xCore.abstract.XenoObject import XenoObject
 
 class Stock(XenoObject):
     def __init__(self, t, pos=None, ins=None):

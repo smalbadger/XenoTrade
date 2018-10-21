@@ -7,12 +7,12 @@ from PySide2.QtWidgets import QLabel
 
 import logging
 
-from UserTileWidget import UserTileWidget
+from xWidgets.UserTile import UserTile
 
-class UserSelectWidget(QWidget):
+class UserSelect(QWidget):
     def __init__(self, kernel, parent=None):
         logging.info("Initializing the login widget.")
-        super(UserSelectWidget, self).__init__(parent)
+        super(UserSelect, self).__init__(parent)
         self.kernel = kernel
         self.parent = parent
         self.initUI()
@@ -27,7 +27,7 @@ class UserSelectWidget(QWidget):
         
     def createElements(self):
         logging.debug("Initializing the login widget's sub-widgets")
-        self.userButtons = [UserTileWidget(u, self) for u in self.kernel.getAllUsers()]
+        self.userButtons = [UserTile(u, self) for u in self.kernel.getAllUsers()]
         for b, u in zip(self.userButtons, self.kernel.getAllUsers()):
             b.setProfilePicture(self.kernel.getUsersDir()+u+'/profile/profile_pic.png')
             b.createLayout()

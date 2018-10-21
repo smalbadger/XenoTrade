@@ -17,13 +17,11 @@ from PySide2.QtWidgets import QScrollArea
 from pprint import pprint
 import logging
 
-from Stock import Stock
-from StockListWidget import StockListWidget
+from xWidgets.StockList import StockList
 
-
-class DashboardWidget(QWidget):
+class Dashboard(QWidget):
     def __init__(self, kernel, parent=None):
-        super(DashboardWidget, self).__init__()
+        super(Dashboard, self).__init__()
         logging.info("Initializing Dashboard Widget.")
         self.kernel = kernel
         self.parent = parent

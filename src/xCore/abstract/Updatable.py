@@ -32,7 +32,7 @@ import logging
 
 from PySide2.QtCore import QObject, Signal
 
-import GlobalSettings as GS
+import xCore.GlobalSettings as GS
 
 
 class Updatable(QObject):

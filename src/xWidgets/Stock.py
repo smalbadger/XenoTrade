@@ -1,3 +1,5 @@
+import logging
+
 from PySide2.QtWidgets import QPushButton
 from PySide2.QtWidgets import QHBoxLayout
 from PySide2.QtWidgets import QVBoxLayout
@@ -6,11 +8,7 @@ from PySide2.QtWidgets import QLineEdit
 from PySide2.QtWidgets import QLabel
 from PySide2.QtWidgets import QGroupBox
 
-import logging
-
-from Stock import Stock
-
-class StockWidget(QGroupBox):
+class Stock(QGroupBox):
     tickerAndNameWidth = 100
     priceWidth = 80
     percentChangeWidth = 80
@@ -50,7 +48,7 @@ class StockWidget(QGroupBox):
     """
     
     def __init__(self, stock, parent=None):
-        super(StockWidget, self).__init__(parent)
+        super(Stock, self).__init__(parent)
         logging.info("Initializing Stock Widget [{}]".format(stock.symbol()))
         self.stock = stock
         self.parent = parent
@@ -89,9 +87,9 @@ class StockWidget(QGroupBox):
         
     def createStyle(self):
         logging.debug("setting the stock widget's style")
-        self.name.setFixedWidth(StockWidget.tickerAndNameWidth)
-        self.price.setFixedWidth(StockWidget.priceWidth)
-        self.percentChange.setFixedWidth(StockWidget.percentChangeWidth)
+        self.name.setFixedWidth(Stock.tickerAndNameWidth)
+        self.price.setFixedWidth(Stock.priceWidth)
+        self.percentChange.setFixedWidth(Stock.percentChangeWidth)
         
         self.setObjectName("stock_widget")
         self.symbol.setObjectName("stock_symbol")
@@ -105,13 +103,13 @@ class StockWidget(QGroupBox):
         
     def updateStyle(self):
         logging.debug("updating the stock widget's style")
-        styleStr = StockWidget.baseStyle
+        styleStr = Stock.baseStyle
         pc = self.stock.percentChange()
         
         if   pc > 0:
-            styleStr += StockWidget.goodStyle
+            styleStr += Stock.goodStyle
         elif pc < 0:
-            styleStr += StockWidget.badStyle
+            styleStr += Stock.badStyle
             
         self.setStyleSheet(styleStr)
         

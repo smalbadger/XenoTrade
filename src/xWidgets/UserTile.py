@@ -7,11 +7,10 @@ from PySide2.QtGui     import QPixmap
 
 import logging
 
-class UserTileWidget(QWidget):
-
+class UserTile(QWidget):
     def __init__(self, text='', parent=None):
         logging.info("Creating {}'s user tile".format(text))
-        super(UserTileWidget, self).__init__(parent)
+        super(UserTile, self).__init__(parent)
         self.parent = parent
         self.nameButton = QPushButton(text)
         
@@ -35,7 +34,7 @@ class UserTileWidget(QWidget):
         
     def resize(self, width, height):
         logging.debug("Resizing the user's tile.")
-        super(UserTileWidget, self).resize(width, height)
+        super(UserTile, self).resize(width, height)
         
     
         

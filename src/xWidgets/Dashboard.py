@@ -17,15 +17,19 @@ from PySide2.QtWidgets import QScrollArea
 from pprint import pprint
 import logging
 
+from xCore.abstract.Updatable import Updatable
 from xWidgets.StockList import StockList
 
-class Dashboard(QWidget):
+class Dashboard(Updatable, QWidget):
     def __init__(self, kernel, parent=None):
         super(Dashboard, self).__init__()
         logging.info("Initializing Dashboard Widget.")
         self.kernel = kernel
         self.parent = parent
         self.initUI()
+        self.addParent(kernel.getCurrentUser())
+        #self.addUpdateFunction(self.update)
+        self.kernel.getUpdateManager().addUpdatable(self)
         
     def initUI(self):
         logging.debug("Initializing the Dashboard's user interface.")
@@ -36,7 +40,7 @@ class Dashboard(QWidget):
     def createElements(self):
         logging.debug("Creating the Dashboard's elements.")
         self.scrollArea = QScrollArea()
-        self.stockListWidget = StockList(self.kernel)
+        self.stockListWidget = StockList(self.kernel, self)
             
     def createLayout(self):
         logging.debug("Creating the Dashboard's layout.")
@@ -48,3 +52,6 @@ class Dashboard(QWidget):
     def createActions(self):
         logging.debug("Connecting the Dashboard's signals and slots.")
         pass
+        
+    def __str__(self):
+        return("Dashboard Widget")

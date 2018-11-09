@@ -12,13 +12,14 @@ from xCore.abstract.Updatable import Updatable
 import time
 
 class StockList(Updatable, QWidget):
-    def __init__(self, kernel):
+    def __init__(self, kernel, parent):
         super(StockList, self).__init__()
         logging.info("Creating the Stock List Widget")
         self.kernel = kernel
-        self.addParent(self.kernel.getCurrentUser())
+        self.addParent(parent)
         self.addUpdateFunction(self.updateStockWidgets)
         self.addUpdateFunction(self.update)
+        self.kernel.getUpdateManager().addUpdatable(self)
         self.initUI()
         
     def initUI(self):
@@ -47,4 +48,8 @@ class StockList(Updatable, QWidget):
     def updateStockWidgets(self):
         logging.debug("CHANGE THIS -- ONLY FOR TESTING -- GETTING NEW STOCKS")
         self.createElements()
+        self.createLayout()
+        
+    def __str__(self):
+        return "StockList widget"
             

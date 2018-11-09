@@ -63,7 +63,6 @@ class XenoTradeGUI(QMainWindow):
             t.start()
             '''
             
-            self.kernel.getUpdateManager().start()
             self.initDashboardGUI()
 
     def initDashboardGUI(self):
@@ -73,6 +72,7 @@ class XenoTradeGUI(QMainWindow):
 
         widget = Dashboard(kernel, self)
         self.setCentralWidget(widget)
+        self.kernel.getUpdateManager().start()
         
     def closeEvent(self, event):
         if self.kernel.getCurrentUser() == None:
@@ -138,9 +138,6 @@ def setupLogging(args):
         
     logging.basicConfig(filename = '../logbook/XenoTrade.log', level = lvl)
     logging.info("================================== NEW LOG ==================================")
-
-
-
 
 if __name__ == '__main__':
     setupLogging(sys.argv)

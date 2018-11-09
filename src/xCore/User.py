@@ -29,7 +29,6 @@ class User(Updatable, XenoObject):
         self.setSecuritiesOwned(set())
         
         self.addUpdateFunction(self.updateSecuritiesOwned)
-        
         self.getKernel().getUpdateManager().addUpdatable(self)
 
     def __del__(self):
@@ -168,6 +167,7 @@ class User(Updatable, XenoObject):
         #sleep(10) #remove this later
         
     def updateSecuritiesOwned_CALLBACK(self, future):
+        # TODO: pass in the result instead of the future.
         """
             When a security is done being gathered by the task manager, add it to the existing set
         """

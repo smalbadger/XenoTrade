@@ -50,18 +50,23 @@ class Updatable(QObject):
     #                                GETTERS
     ###############################################################################
     def getLastUpdateTime(self):
+        logging.debug("Getting last update time.")
         return self._lastUpdateTime
         
     def getUpdateFunctionList(self):
+        logging.debug("Getting the update function list.")
         return self._updateFunctionList
 
     def getUpdateFrequency(self):
+        logging.debug("Getting the update frequency.")
         return self._updateFrequency
         
     def getParents(self):
+        logging.debug("Getting the parents.")
         return self._parents
         
     def getChildren(self):
+        logging.debug("Getting the children.")
         return self._children
         
     ###############################################################################
@@ -115,13 +120,18 @@ class Updatable(QObject):
         if shouldUpdate:
             logging.debug("We should update")
             self.setLastUpdateTime(time())
-            # iterate through the update functions that the user has set and call them
-            for fn, args, kwargs in self.getUpdateFunctionList():
-                logging.debug("Running the update function: {}".format(fn))
-                try:
-                    fn(*args, **kwargs)
-                except Exception as e:
-                    print(e)
+            logging.debug("I think it should break here.")
+            updateFns = self.getUpdateFunctionList()
+            print(self)
+            if len(updateFns) > 0:
+                logging.debug("tuh duh")
+                # iterate through the update functions that the user has set and call them
+                for fn, args, kwargs in self.getUpdateFunctionList():
+                    logging.debug("Running the update function: {}".format(fn))
+                    try:
+                        fn(*args, **kwargs)
+                    except Exception as e:
+                        print(e)
         
         self.updateComplete.emit()    
         return shouldUpdate

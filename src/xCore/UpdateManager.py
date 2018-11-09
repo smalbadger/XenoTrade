@@ -44,11 +44,11 @@ class UpdateManager(QThread, XenoObject):
     #                                GETTERS
     ###############################################################################
     def getUpdateGraph(self):
-        logging.debug("Getting all update graph root nodes")
+        #logging.debug("Getting all update graph root nodes")
         return self._updatableRoots
         
     def getRunStatus(self):
-        logging.debug("Getting run status")
+        #logging.debug("Getting run status")
         return self._runStatus
         
     def setKernel(self):
@@ -83,16 +83,34 @@ class UpdateManager(QThread, XenoObject):
     #                           FUNCTIONAL METHODS
     ###############################################################################
     def run(self):
-        logging.debug("Updating all updatables... (continuous)")
-        self.setRunStatus(True)
+        try:
+            logging.debug("Updating all updatables... (continuous)")
+            self.printAllUpdatables()
+            self.setRunStatus(True)
+            workQueue = queue.Queue()    
+            while(self.getRunStatus()):
+                for node in self.getUpdateGraph():
+                    workQueue.put(node)
+                while not workQueue.empty():
+                    node = workQueue.get()
+                    updated = node.runUpdates()
+                    logging.debug("Did we update? {}".format(updated))
+                    if updated:
+                        for child in node.getChildren():
+                            workQueue.put(child)
+        except Exception as e:
+            print(e)
+                      
+    def printAllUpdatables(self):
+        logging.info("Printing the Update Dependency Graph")
+        print("Printing all nodes in update graph:")
         workQueue = queue.Queue()    
-        while(self.getRunStatus()):
-            for node in self.getUpdateGraph():
-                workQueue.put(node)
-            while not workQueue.empty():
-                node = workQueue.get()
-                updated = node.runUpdates()
-                if updated:
-                    for child in node.children():
-                        workQueue.put(child)
-                
+        for node in self.getUpdateGraph():
+            workQueue.put(node)
+        while not workQueue.empty():
+            node = workQueue.get()
+            print([node])
+            print("    Parents:  {}".format(node.getParents()))
+            print("    Children: {}".format(node.getChildren()))
+            for child in node.getChildren():
+                workQueue.put(child)

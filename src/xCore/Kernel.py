@@ -86,7 +86,7 @@ class Kernel(XenoObject):
         
         
     ###########################################################################
-    #####                      USER MANAGEMENT METHODS
+    #                          USER MANAGEMENT METHODS
     ###########################################################################
     def switchUser(self, username, password):
         logging.info("Attempting to switch user to {}.".format(username))

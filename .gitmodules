@@ -1,0 +1,3 @@
+[submodule "src/xCore/Robinhood"]
+	path = src/xCore/Robinhood
+	url = git@github.com:smalbadger/Robinhood.git

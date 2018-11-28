@@ -8,4 +8,4 @@ Users/**
 ! Users/.__template__/**
 
 # Omit all log files
-logbook/**
+# logbook/**

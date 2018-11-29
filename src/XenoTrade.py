@@ -70,6 +70,7 @@ class XenoTradeGUI(QMainWindow):
         #self.loadWidget.stopAnimation()
         #self.animateThread.quit()
 
+        #logging.info("")
         widget = Dashboard(kernel, self)
         self.setCentralWidget(widget)
         self.kernel.getUpdateManager().start()
@@ -107,6 +108,9 @@ def setAppStyle(app):
     app.setPalette(palette)
 
 def setupLogging(args):
+    logFile = "../logbook/XenoTrade.log"
+    open(logFile,"w").close()   # clears log file
+    
     if "--logging-level" in args:
         lvlStr = ""
         try:
@@ -136,7 +140,7 @@ def setupLogging(args):
         print("Using INFO as the logging level by default.")
         lvl = logging.INFO
         
-    logging.basicConfig(filename = '../logbook/XenoTrade.log', level = lvl)
+    logging.basicConfig(filename = logFile, level = lvl)
     logging.info("================================== NEW LOG ==================================")
 
 if __name__ == '__main__':

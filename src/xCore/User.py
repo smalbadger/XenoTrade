@@ -156,6 +156,7 @@ class User(Updatable, XenoObject):
             retrieve a summary of all securities owned. then iterate through the summary and
             retrieve an updated security object.
         """
+        
         logging.info("Updating {}'s securities.".format(self.getUserName()))
         
         t = self.getTrader()
@@ -164,7 +165,8 @@ class User(Updatable, XenoObject):
         for i in range(len(ownedSummary)):
             tm.addNetworkTask(Stock, self.updateSecuritiesOwned_CALLBACK, t, pos=ownedSummary[i])
             
-        #sleep(10) #remove this later
+        while len(self.getSecuritiesOwned()) != len(ownedSummary):
+            sleep(0.5) #remove this later
         
     def updateSecuritiesOwned_CALLBACK(self, future):
         # TODO: pass in the result instead of the future.
@@ -173,9 +175,9 @@ class User(Updatable, XenoObject):
         """
         logging.debug("Appending Stock to user's list of stocks")
         print(future.result())
-        self.acquireLock("stockData")
+        #self.acquireLock("stockData")
         self.getSecuritiesOwned().add(future.result())
-        self.releaseLock("stockData")
+        #self.releaseLock("stockData")
         
     ###############################################################################
     #                           UTILITY METHODS

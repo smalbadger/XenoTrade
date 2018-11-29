@@ -99,16 +99,14 @@ class Kernel(XenoObject):
     
     def addUser(self, username, password):
         logging.info("Attempting to add user {}.".format(username))
-        err = self.switchUser(username, password)
-        if err:
-            logging.error(err)
-            return err
-        else:
+        if self.switchUser(username, password):
             template = self.getUsersDir() + '.__template__/'
             newUserDir = self.getUsersDir() + username + '/'
             os.mkdir(newUserDir)
             copy_tree(template, newUserDir)
             logging.info("User {} was successfully created".format(username))
+        else:
+            logging.info("creation of user {} failed.".format(username))
         
         
     def userExists(self, user):

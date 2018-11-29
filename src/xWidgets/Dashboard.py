@@ -28,7 +28,7 @@ class Dashboard(Updatable, QWidget):
         self.parent = parent
         self.initUI()
         self.addParent(kernel.getCurrentUser())
-        #self.addUpdateFunction(self.update)
+        self.addUpdateFunction(self.emptyUpdateFunction)
         self.kernel.getUpdateManager().addUpdatable(self)
         
     def initUI(self):
@@ -53,5 +53,8 @@ class Dashboard(Updatable, QWidget):
         logging.debug("Connecting the Dashboard's signals and slots.")
         pass
         
+    def emptyUpdateFunction(self):
+        pass
+        
     def __str__(self):
-        return("Dashboard Widget")
+        return "Dashboard Widget"

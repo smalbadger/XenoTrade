@@ -118,20 +118,21 @@ class Updatable(QObject):
             shouldUpdate = True
             
         if shouldUpdate:
-            logging.debug("We should update")
+            logging.debug("We should update: {}".format(self.__str__()))
             self.setLastUpdateTime(time())
-            logging.debug("I think it should break here.")
             updateFns = self.getUpdateFunctionList()
             print(self)
             if len(updateFns) > 0:
-                logging.debug("tuh duh")
                 # iterate through the update functions that the user has set and call them
                 for fn, args, kwargs in self.getUpdateFunctionList():
                     logging.debug("Running the update function: {}".format(fn))
                     try:
                         fn(*args, **kwargs)
+                        logging.debug("Successfully ran the update function: {}".format(fn))
                     except Exception as e:
+                        logging.debug("Failed to run the update function: {}".format(fn))
                         print(e)
         
-        self.updateComplete.emit()    
+        #self.updateComplete.emit()    # I don't have a use for this yet
+        logging.debug("done updating {}".format(self.__str__()))
         return shouldUpdate

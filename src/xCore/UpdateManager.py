@@ -43,7 +43,7 @@ class UpdateManager(QThread, XenoObject):
     ###############################################################################
     #                                GETTERS
     ###############################################################################
-    def getUpdateGraph(self):
+    def getUpdateGraphRoots(self):
         #logging.debug("Getting all update graph root nodes")
         return self._updatableRoots
         
@@ -61,7 +61,7 @@ class UpdateManager(QThread, XenoObject):
     def addUpdatable(self, newUpdatable):
         if newUpdatable.getParents() == []:
             logging.debug("Adding new updatable to the update graph as ROOT")
-            self.getUpdateGraph().append(newUpdatable)
+            self.getUpdateGraphRoots().append(newUpdatable)
         else:
             logging.debug("Adding new updatable to the update graph as CHILD")
             for parent in newUpdatable.getParents():
@@ -89,7 +89,7 @@ class UpdateManager(QThread, XenoObject):
             self.setRunStatus(True)
             workQueue = queue.Queue()    
             while(self.getRunStatus()):
-                for node in self.getUpdateGraph():
+                for node in self.getUpdateGraphRoots():
                     workQueue.put(node)
                 while not workQueue.empty():
                     node = workQueue.get()
@@ -105,7 +105,7 @@ class UpdateManager(QThread, XenoObject):
         logging.info("Printing the Update Dependency Graph")
         print("Printing all nodes in update graph:")
         workQueue = queue.Queue()    
-        for node in self.getUpdateGraph():
+        for node in self.getUpdateGraphRoots():
             workQueue.put(node)
         while not workQueue.empty():
             node = workQueue.get()

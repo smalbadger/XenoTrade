@@ -8,6 +8,8 @@ from PySide2.QtWidgets import QLineEdit
 from PySide2.QtWidgets import QLabel
 from PySide2.QtWidgets import QGroupBox
 
+import threading
+
 class Stock(QGroupBox):
     tickerAndNameWidth = 100
     priceWidth = 80
@@ -49,6 +51,7 @@ class Stock(QGroupBox):
     
     def __init__(self, stock=None, parent=None):
         super(Stock, self).__init__(parent)
+        print("Current Thread:    {}".format(threading.get_ident()))
         logging.info("Initializing Stock Widget")
         self.stock = stock
         self.parent = parent
@@ -57,6 +60,7 @@ class Stock(QGroupBox):
     def initUI(self):
         logging.debug("Initializing the stock widget's UI")
         self.createElements()
+        self.updateText()
         self.createLayout()
         self.createStyle()
         self.createActions()

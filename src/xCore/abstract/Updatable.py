@@ -36,7 +36,7 @@ import xCore.GlobalSettings as GS
 
 
 class Updatable(QObject):
-    updateComplete = Signal()   #emit this signal when an update is done.
+    updateComplete = Signal(bool)   #emit this signal when an update is done.
     
     def __init__(self, frequency=None):
         super(Updatable, self).__init__()
@@ -132,7 +132,6 @@ class Updatable(QObject):
                     except Exception as e:
                         logging.debug("Failed to run the update function: {}".format(fn))
                         print(e)
-        
-        #self.updateComplete.emit()    # I don't have a use for this yet
         logging.debug("done updating {}".format(self.__str__()))
-        return shouldUpdate
+        self.updateComplete.emit(shouldUpdate)
+        

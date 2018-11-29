@@ -23,10 +23,13 @@ import queue
 import logging
 
 from PySide2.QtCore import QThread
+from PySide2.QtCore import QObject, Signal
 
 from xCore.abstract.XenoObject import XenoObject
 
 class UpdateManager(QThread, XenoObject):
+    updateStart = Signal()
+
     def __init__(self, kernel):
         QThread.__init__(self)
         XenoObject.__init__(self)
@@ -82,6 +85,12 @@ class UpdateManager(QThread, XenoObject):
     ###############################################################################
     #                           FUNCTIONAL METHODS
     ###############################################################################
+    
+    def on_nodeUpdateComplete(self, updated):
+        print("recieved response: {}".format(updated))
+        self.waiting = False
+        self.updated = updated
+    
     def run(self):
         try:
             logging.debug("Updating all updatables... (continuous)")
@@ -93,9 +102,29 @@ class UpdateManager(QThread, XenoObject):
                     workQueue.put(node)
                 while not workQueue.empty():
                     node = workQueue.get()
-                    updated = node.runUpdates()
-                    logging.debug("Did we update? {}".format(updated))
-                    if updated:
+                    
+                    try:
+                        self.updateStart.disconnect()
+                    except:
+                        pass
+                        
+                    #updated = node.runUpdates()
+                    self.waiting = True
+                    self.updated = False
+                    self.updateStart.connect(node.runUpdates)
+                    
+                    node.updateComplete.connect(self.on_nodeUpdateComplete)
+                    print("sending signal to update {}".format(node))
+                    self.updateStart.emit()
+                    
+                    while self.waiting:
+                        pass
+                        
+                    node.updateComplete.disconnect()
+                    
+                    print("did we update? {}".format(self.updated))
+                    logging.debug("Did we update? {}".format(self.updated))
+                    if self.updated:
                         for child in node.getChildren():
                             workQueue.put(child)
         except Exception as e:

@@ -15,6 +15,7 @@ import xCore.GlobalSettings as GS
 from xCore.User import User
 from xCore.TaskManager import TaskManager
 from xCore.UpdateManager import UpdateManager
+from xCore.UpdateDependencyGraph import UpdateDependencyGraph
 from xCore.abstract import XenoObject
 
 class Kernel(XenoObject):
@@ -25,17 +26,14 @@ class Kernel(XenoObject):
         self.setApp(app)
         self.setCurrentUser(user)
         self.setTaskManager(TaskManager(self, GS.NUM_THREADS, GS.NUM_PROCESSES))
-        self.setUpdateManager(UpdateManager(self))
+        self.setUpdateGraph(UpdateDependencyGraph(self))
+        self.setUpdateManager(UpdateManager(self, self.getUpdateGraph()))
         
     def __del__(self):
         pass
         
     def __str__(self):
         pass
-        
-    def getTaskManager(self):
-        return self.taskManager
-    
     ###############################################################################
     #                                GETTERS
     ###############################################################################
@@ -50,6 +48,9 @@ class Kernel(XenoObject):
         
     def getUpdateManager(self):
         return self._updateManager
+        
+    def getUpdateGraph(self):
+        return self._updateGraph
         
     def getBaseDir(self):
         return os.getcwd().replace('\\','/')[:-3]
@@ -84,6 +85,8 @@ class Kernel(XenoObject):
         logging.debug("Setting the kernel's update manager.")
         self._updateManager = updateManager
         
+    def setUpdateGraph(self, graph):
+        self._updateGraph = graph
         
     ###########################################################################
     #                          USER MANAGEMENT METHODS

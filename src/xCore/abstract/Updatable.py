@@ -24,19 +24,41 @@ How To Use:
             
 Why parents and children?
             To find out more about this, please see the UpdateManager documentation.
+         
+Instructions:
+            Because multiple inheritance in PyQt is not allowed, there are a few
+            small things you need to add to your subclass.
             
+            1. add the following import statement:
+            
+                from PySide2.QtCore import QObject, Signal
+                
+            2. if you aren't inheriting from any Qt objects yet, add QObject to
+               your inheritance list
+            
+            3. add the following signal just below the class declaration:
+               
+                updateComplete = Signal(bool) #emit this signal when an update is done.
+            
+            4. add the following function:
+            
+                def runUpdates(self):
+                    updateStatus = super().runUpdates()
+                    self.updateComplete.emit(updateStatus)
 '''
 
 from time import time
 import logging
 
-from PySide2.QtCore import QObject, Signal
+from PySide2.QtCore import Signal
 
 import xCore.GlobalSettings as GS
 
 
-class Updatable(QObject):
-    updateComplete = Signal(bool)   #emit this signal when an update is done.
+class Updatable():
+
+    # TODO: copy and paste the line below into the same place in your subclass
+    #   updateComplete = Signal(bool)   #emit this signal when an update is done.
     
     def __init__(self, frequency=None):
         super(Updatable, self).__init__()
@@ -118,20 +140,21 @@ class Updatable(QObject):
             shouldUpdate = True
             
         if shouldUpdate:
-            logging.debug("We should update: {}".format(self.__str__()))
+            logging.debug("We should update")
             self.setLastUpdateTime(time())
+            logging.debug("I think it should break here.")
             updateFns = self.getUpdateFunctionList()
             print(self)
             if len(updateFns) > 0:
+                logging.debug("tuh duh")
                 # iterate through the update functions that the user has set and call them
                 for fn, args, kwargs in self.getUpdateFunctionList():
                     logging.debug("Running the update function: {}".format(fn))
                     try:
                         fn(*args, **kwargs)
-                        logging.debug("Successfully ran the update function: {}".format(fn))
                     except Exception as e:
-                        logging.debug("Failed to run the update function: {}".format(fn))
                         print(e)
-        logging.debug("done updating {}".format(self.__str__()))
-        self.updateComplete.emit(shouldUpdate)
         
+        # self.updateComplete.emit(shouldUpdate) Should be called by subclass instead
+        return shouldUpdate
+

@@ -10,16 +10,19 @@ import logging
 from time import sleep, time
 
 from Robinhood import Robinhood
+from PySide2.QtCore import QObject, Signal
 
 from xCore.Stock import Stock
 from xCore.abstract import Updatable, XenoObject
 
-class User(Updatable, XenoObject):
-
+class User(Updatable, XenoObject, QObject):
+    updateComplete = Signal(bool) #emit this signal when an update is done.
+    
     def __init__(self, kernel, directory):
         logging.info("Creating User Object")
         Updatable.__init__(self)
         XenoObject.__init__(self)
+        QObject.__init__(self)
         
         self.setKernel(kernel)
         self.setTrader()
@@ -29,7 +32,7 @@ class User(Updatable, XenoObject):
         self.setSecuritiesOwned(set())
         
         self.addUpdateFunction(self.updateSecuritiesOwned)
-        self.getKernel().getUpdateManager().addUpdatable(self)
+        self.getKernel().getUpdateGraph().addUpdatable(self)
 
     def __del__(self):
         logging.info("Deleting User Object")
@@ -179,6 +182,10 @@ class User(Updatable, XenoObject):
         self.getSecuritiesOwned().add(future.result())
         #self.releaseLock("stockData")
         
+        
+    def runUpdates(self):
+        updateStatus = super().runUpdates()
+        self.updateComplete.emit(updateStatus)
     ###############################################################################
     #                           UTILITY METHODS
     ###############################################################################

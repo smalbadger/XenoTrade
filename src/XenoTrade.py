@@ -26,51 +26,19 @@ class XenoTradeGUI(QMainWindow):
         self.setCentralWidget(widget)
 
     def loadApplication(self):
-        if not self.kernel.getCurrentUser().getVerificationStatus():
+        if self.kernel.getCurrentUser().getVerificationStatus() == False:
             return
         else:
             n = self.kernel.getCurrentUser().getUserName()
             m = """
             Please be patient while we retrieve your information from Robinhood
             """
-            '''
-            p = self
-            self.loadWidget = LoadingScreen(self.kernel, username=n, message=m)
-            self.setCentralWidget(self.loadWidget)
-            self.animateThread = QtCore.QThread()
-            self.animateThread.started.connect(self.loadWidget.startAnimation)
-            self.animateThread.start()
-            '''
-
-            #######################################################################
-            # This section of code moves the user object to another thread, pulls #
-            # all stock information from the robinhood servers (which can take    #
-            # a while), and then loads the dashboard GUI. While the stock         #
-            # information is being pulled, a loading screen is shown.             #
-            #######################################################################
-            '''
-            self.tempThread = QtCore.QThread()
-            self.kernel.getCurrentUser().moveToThread(self.tempThread)
-            self.kernel.getCurrentUser().updateComplete.connect(self.initDashboardGUI)
-            self.tempThread.started.connect(self.kernel.getCurrentUser().update)
-            self.tempThread.start()
-            '''
             
-            '''
-            t = QtCore.QThread()
-            self.kernel.getUpdateManager().moveToThread(t)
-            t.started.connect(self.kernel.getUpdateManager().updateAllUpdatables)
-            t.start()
-            '''
+            # do some type of animation here while stuff is loading
             
             self.initDashboardGUI()
 
     def initDashboardGUI(self):
-        #self.tempThread.quit()
-        #self.loadWidget.stopAnimation()
-        #self.animateThread.quit()
-
-        #logging.info("")
         widget = Dashboard(kernel, self)
         self.setCentralWidget(widget)
         self.kernel.getUpdateManager().start()

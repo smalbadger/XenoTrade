@@ -8,6 +8,8 @@ from PySide2.QtWidgets import QLineEdit
 from PySide2.QtWidgets import QLabel
 from PySide2.QtWidgets import QGroupBox
 
+import threading
+
 class Stock(QGroupBox):
     tickerAndNameWidth = 100
     priceWidth = 80
@@ -47,9 +49,9 @@ class Stock(QGroupBox):
         }
     """
     
-    def __init__(self, stock, parent=None):
+    def __init__(self, stock=None, parent=None):
         super(Stock, self).__init__(parent)
-        logging.info("Initializing Stock Widget [{}]".format(stock.symbol()))
+        logging.info("Initializing Stock Widget")
         self.stock = stock
         self.parent = parent
         self.initUI()
@@ -57,6 +59,7 @@ class Stock(QGroupBox):
     def initUI(self):
         logging.debug("Initializing the stock widget's UI")
         self.createElements()
+        self.updateText()
         self.createLayout()
         self.createStyle()
         self.createActions()
@@ -64,14 +67,12 @@ class Stock(QGroupBox):
         
     def createElements(self):
         logging.debug("creating the stock widget's elements.")
-        name = self.stock.simpleName()
-        if name == None:
-            name = ""
-        self.name = QLabel("<i>{}</i>".format(name))
-        self.symbol = QLabel("<strong>{}</strong>".format(self.stock.symbol()))
-        self.price = QLabel("${:.2f}".format(self.stock.lastTradePrice()))
-        self.percentChange = QLabel("{:.3f}%".format(self.stock.percentChange()))
-
+        
+        self.name = QLabel()
+        self.symbol = QLabel()
+        self.price = QLabel()
+        self.percentChange = QLabel()
+        
     def createLayout(self):
         logging.debug("creating the stock widget's layout")
         self.nameLayout = QVBoxLayout()
@@ -97,12 +98,20 @@ class Stock(QGroupBox):
         self.price.setObjectName("stock_price")
         self.percentChange.setObjectName("stock_percent_change")
         
-    '''
-    def updateData(self):
+    def setStock(self, stock):
+        self.stock = stock
+    
+    def updateText(self):
         logging.debug("Updating stock widget's data")
-        self.name.setText("")
-    '''
-        
+        if self.stock != None:
+            name = self.stock.simpleName()
+            if name == None:
+                name = ""
+            self.name.setText("<i>{}</i>".format(name))
+            self.symbol.setText("<strong>{}</strong>".format(self.stock.symbol()))
+            self.price.setText("${:.2f}".format(self.stock.lastTradePrice()))
+            self.percentChange.setText("{:.3f}%".format(self.stock.percentChange()))
+
     def updateStyle(self):
         logging.debug("updating the stock widget's style")
         styleStr = Stock.baseStyle

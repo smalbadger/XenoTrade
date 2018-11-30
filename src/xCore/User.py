@@ -10,16 +10,19 @@ import logging
 from time import sleep, time
 
 from Robinhood import Robinhood
+from PySide2.QtCore import QObject, Signal
 
 from xCore.Stock import Stock
 from xCore.abstract import Updatable, XenoObject
 
-class User(Updatable, XenoObject):
-
+class User(Updatable, XenoObject, QObject):
+    updateComplete = Signal(bool) #emit this signal when an update is done.
+    
     def __init__(self, kernel, directory):
         logging.info("Creating User Object")
         Updatable.__init__(self)
         XenoObject.__init__(self)
+        QObject.__init__(self)
         
         self.setKernel(kernel)
         self.setTrader()
@@ -29,7 +32,7 @@ class User(Updatable, XenoObject):
         self.setSecuritiesOwned(set())
         
         self.addUpdateFunction(self.updateSecuritiesOwned)
-        self.getKernel().getUpdateManager().addUpdatable(self)
+        self.getKernel().getUpdateGraph().addUpdatable(self)
 
     def __del__(self):
         logging.info("Deleting User Object")
@@ -156,6 +159,7 @@ class User(Updatable, XenoObject):
             retrieve a summary of all securities owned. then iterate through the summary and
             retrieve an updated security object.
         """
+        
         logging.info("Updating {}'s securities.".format(self.getUserName()))
         
         t = self.getTrader()
@@ -164,7 +168,8 @@ class User(Updatable, XenoObject):
         for i in range(len(ownedSummary)):
             tm.addNetworkTask(Stock, self.updateSecuritiesOwned_CALLBACK, t, pos=ownedSummary[i])
             
-        #sleep(10) #remove this later
+        while len(self.getSecuritiesOwned()) != len(ownedSummary):
+            sleep(0.5) #remove this later
         
     def updateSecuritiesOwned_CALLBACK(self, future):
         # TODO: pass in the result instead of the future.
@@ -173,10 +178,14 @@ class User(Updatable, XenoObject):
         """
         logging.debug("Appending Stock to user's list of stocks")
         print(future.result())
-        self.acquireLock("stockData")
+        #self.acquireLock("stockData")
         self.getSecuritiesOwned().add(future.result())
-        self.releaseLock("stockData")
+        #self.releaseLock("stockData")
         
+        
+    def runUpdates(self):
+        updateStatus = super().runUpdates()
+        self.updateComplete.emit(updateStatus)
     ###############################################################################
     #                           UTILITY METHODS
     ###############################################################################

@@ -25,13 +25,15 @@ class Stock(XenoObject):
         self.instrument = t.instrument(ins)
         self.fundamentals = t.fundamentals(url=self.instrument['fundamentals'])
         self.quote = self.trader.quote_data(self.symbol())
-        self.popularity = self.trader.get_popularity(self.symbol())
+        #self.popularity = self.trader.get_popularity(self.symbol())
         logging.info("New Stock object created: {}".format(self.symbol()))
 
     def __hash__(self):
         return self.symbol().__hash__()
 
     def __eq__(self, other):
+        if(type(other) != Stock):
+            return False
         if self.symbol() == other.symbol():
             return True
         else:

@@ -51,7 +51,6 @@ class Stock(QGroupBox):
     
     def __init__(self, stock=None, parent=None):
         super(Stock, self).__init__(parent)
-        print("Current Thread:    {}".format(threading.get_ident()))
         logging.info("Initializing Stock Widget")
         self.stock = stock
         self.parent = parent

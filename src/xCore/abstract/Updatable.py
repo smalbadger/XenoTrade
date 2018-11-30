@@ -140,16 +140,12 @@ class Updatable():
             shouldUpdate = True
             
         if shouldUpdate:
-            logging.debug("We should update")
             self.setLastUpdateTime(time())
-            logging.debug("I think it should break here.")
             updateFns = self.getUpdateFunctionList()
             print(self)
             if len(updateFns) > 0:
-                logging.debug("tuh duh")
                 # iterate through the update functions that the user has set and call them
                 for fn, args, kwargs in self.getUpdateFunctionList():
-                    logging.debug("Running the update function: {}".format(fn))
                     try:
                         fn(*args, **kwargs)
                     except Exception as e:

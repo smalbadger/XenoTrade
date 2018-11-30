@@ -137,13 +137,12 @@ class UpdateDependencyGraph(XenoObject, QObject):
     ############################################################################
     def on_updateSignal(self, nodeID):   
         nodeToUpdate = self._id_to_ref[nodeID]
-        print("recieved signal to update node {}: {}".format(nodeID, nodeToUpdate))
         nodeToUpdate.updateComplete.connect(self.on_nodeUpdateComplete)
-        print("Running updates...")
         nodeToUpdate.runUpdates()
-        print("Updates complete.")
         nodeToUpdate.updateComplete.disconnect()
         
     def on_nodeUpdateComplete(self, updated):
+        # slot for signal from the node that's begin updated.
+        # just re-emit the signal. It will be caught by the UpdateManager
         self.updateComplete.emit(updated)
         

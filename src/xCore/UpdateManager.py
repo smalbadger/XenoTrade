@@ -81,7 +81,6 @@ class UpdateManager(QThread, XenoObject):
                 self.waiting = True
                 self.updated = False
                 
-                print("sending signal to update {}".format(nodeID))
                 self.updateStart.emit(nodeID)
                 while self.waiting:
                     pass

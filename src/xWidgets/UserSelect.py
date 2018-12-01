@@ -158,7 +158,6 @@ class UserSelect(QWidget):
         assert(self.selectedUser != None)
         pwd = self.existingUserLoginField.text()
         if not self.kernel.switchUser(self.selectedUser, pwd):
-            logging.error("Invalid username or password")
             self.existingUserLoginErrorLabel.setText(err)
             self.existingUserLoginErrorLabel.show()
         else:

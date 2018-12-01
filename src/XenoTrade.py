@@ -47,9 +47,7 @@ class XenoTradeGUI(QMainWindow):
             
         try:
             err = self.kernel.getCurrentUser().logout()
-            logging.error(err)
         except:
-            logging.error("No current user")
         sys.exit(0)
 
 

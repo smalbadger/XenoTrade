@@ -115,7 +115,6 @@ class TaskManager(XenoObject):
     def setNetworkWorkQueue(self, queue):
         self.acquireLock("self._networkWorkQueue")
         if (type(queue) != Queue):
-            logging.critical("Must provide a Queue to set as the network work queue")
         self._networkWorkQueue = queue   
         self.releaseLock("self._networkWorkQueue")
             

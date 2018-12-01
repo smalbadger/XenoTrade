@@ -134,7 +134,6 @@ class User(Updatable, XenoObject, QObject):
         if status:
             return True
         else:
-            logging.error("Credentials did not match Robinhood's servers.")
             return False
         
     ###############################################################################

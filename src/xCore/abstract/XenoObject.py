@@ -20,7 +20,6 @@ class XenoObject():
         
     def releaseLock(self, name):
         if name not in self.locks:
-            logging.error("{} lock does not exist, so it cannot be released. check your lock names")
             return 
         self.locks[name].release()
         

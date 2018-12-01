@@ -12,7 +12,7 @@ Users/**
 ! Users/.__template__/**
 
 # Omit all log files except .gitkeep
-logbook/**
+logbook/*
 ! logbook/.gitkeep
 
 

@@ -1,18 +1,15 @@
-# remove compiled python files because they'll change every time 
-# a source file changes
-src/__pycache__/
-src/xCore/__pycache__/
-src/xWidgets/__pycache__/
+# ignore all __pycache__ directories any depth under the src directory
+src/**/__pycache__/
 
 # PyCharm project files
 src/.idea/
 
 # Omit all users' directories except for the .__template__ directory.
 Users/**
-! Users/.__template__/**
+!Users/.__template__/**
 
 # Omit all log files except .gitkeep
 logbook/*
-! logbook/.gitkeep
+!logbook/.gitkeep
 
 

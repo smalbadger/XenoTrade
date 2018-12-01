@@ -13,7 +13,6 @@ from xWidgets import UserSelect, Dashboard, LoadingScreen
 
 class XenoTradeGUI(QMainWindow):
     def __init__(self, kernel, parent=None):
-        logging.info("Initializing XenoTrade GUI")
         super(XenoTradeGUI, self).__init__(parent)
         self.kernel = kernel
         self.showMaximized()
@@ -56,7 +55,6 @@ class XenoTradeGUI(QMainWindow):
 
 #=============================================================================#
 def setAppStyle(app):
-    logging.info("Setting application style")
     app.setStyle('Fusion')
     palette = QPalette()
     palette.setColor(QPalette.Window, QtGui.QColor(53,53,53))
@@ -108,12 +106,10 @@ def setupLogging(args):
         lvl = logging.INFO
         
     logging.basicConfig(filename = logFile, level = lvl)
-    logging.info("================================== NEW LOG ==================================")
 
 if __name__ == '__main__':
     setupLogging(sys.argv)
 
-    logging.info("Creating Qt application")
     app = QApplication(sys.argv)
     setAppStyle(app)
     kernel = Kernel(app)

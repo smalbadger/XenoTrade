@@ -51,13 +51,11 @@ class Stock(QGroupBox):
     
     def __init__(self, stock=None, parent=None):
         super(Stock, self).__init__(parent)
-        logging.info("Initializing Stock Widget")
         self.stock = stock
         self.parent = parent
         self.initUI()
         
     def initUI(self):
-        logging.debug("Initializing the stock widget's UI")
         self.createElements()
         self.updateText()
         self.createLayout()
@@ -66,14 +64,12 @@ class Stock(QGroupBox):
         self.update()
         
     def createElements(self):
-        logging.debug("creating the stock widget's elements.")
         self.name = QLabel()
         self.symbol = QLabel()
         self.price = QLabel()
         self.percentChange = QLabel()
        
     def createLayout(self):
-        logging.debug("creating the stock widget's layout")
         self.nameLayout = QVBoxLayout()
         self.nameLayout.addWidget(self.symbol)
         self.nameLayout.addWidget(self.name)
@@ -86,7 +82,6 @@ class Stock(QGroupBox):
         self.setLayout(self.mainLayout)
         
     def createStyle(self):
-        logging.debug("setting the stock widget's style")
         self.name.setFixedWidth(Stock.tickerAndNameWidth)
         self.price.setFixedWidth(Stock.priceWidth)
         self.percentChange.setFixedWidth(Stock.percentChangeWidth)
@@ -101,7 +96,6 @@ class Stock(QGroupBox):
         self.stock = stock
     
     def updateText(self):
-        logging.debug("Updating stock widget's data")
         if self.stock != None:
             name = self.stock.simpleName()
             if name == None:
@@ -112,7 +106,6 @@ class Stock(QGroupBox):
             self.percentChange.setText("{:.3f}%".format(self.stock.percentChange()))
 
     def updateStyle(self):
-        logging.debug("updating the stock widget's style")
         styleStr = Stock.baseStyle
         pc = self.stock.percentChange()
         
@@ -124,6 +117,5 @@ class Stock(QGroupBox):
         self.setStyleSheet(styleStr)
         
     def createActions(self):
-        logging.debug("Connecting the stock widget's signals and slots")
         #NOTE: No actions are set 
         pass

@@ -19,7 +19,6 @@ class User(Updatable, XenoObject, QObject):
     updateComplete = Signal(bool) #emit this signal when an update is done.
     
     def __init__(self, kernel, directory):
-        logging.info("Creating User Object")
         Updatable.__init__(self)
         XenoObject.__init__(self)
         QObject.__init__(self)
@@ -35,7 +34,6 @@ class User(Updatable, XenoObject, QObject):
         self.getKernel().getUpdateGraph().addUpdatable(self)
 
     def __del__(self):
-        logging.info("Deleting User Object")
         try:
             self.getTrader().logout()
             self.setVerificationStatus(False)
@@ -78,35 +76,27 @@ class User(Updatable, XenoObject, QObject):
     #                               SETTERS
     ###############################################################################
     def setUserName(self, directory=None, name=None):
-        logging.debug("Setting user name.")
         if directory:
             self._userName  = directory.strip('/')
             self._userName  = self._userName[self._userName.rfind('/')+1:]
         elif name:
             self._userName = name
         else:
-            logging.warning("Username could not be set.")
             return
-        logging.debug("Username set to ".format(self._userName))
         
     def setKernel(self, kernel):
-        logging.debug("Setting the user's kernel")
         self._kernel = kernel
         
     def setUserDir(self, directory):
-        logging.debug("setting the user's directory")
         self._userDir = directory
         
     def setTrader(self):
-        logging.debug("setting the user's trader")
         self._trader = Robinhood()
     
     def setVerificationStatus(self, status):
-        logging.debug("setting the user's verification status to {}".format(status))
         self._verificationStatus = status
     
     def setSecuritiesOwned(self, securities):
-        logging.debug("Setting the user's securities owned")
         self._securitiesOwned = securities
         
     ###############################################################################
@@ -116,7 +106,6 @@ class User(Updatable, XenoObject, QObject):
         '''
             Attempts to log the current user out.
         '''
-        logging.info("Logging current user out")
         try:
             self.getTrader().logout()
         except:
@@ -137,15 +126,12 @@ class User(Updatable, XenoObject, QObject):
         Case 3) User is not logged in, but entered correct credentials:
                 - log user in and return None
         '''
-        logging.info("Checking {}'s credentials.".format(self.getUserName()))
         if self.getVerificationStatus():
-            logging.info("{} is already logged in".format(self.getUserName()))
             return True
 
         status = self.getTrader().login(username=self.getUserName(), password=pwd)
         self.setVerificationStatus(status)
         if status:
-            logging.info("{} has been successfully logged in.".format(self.getUserName()))
             return True
         else:
             logging.error("Credentials did not match Robinhood's servers.")
@@ -159,7 +145,6 @@ class User(Updatable, XenoObject, QObject):
             retrieve a summary of all securities owned. then iterate through the summary and
             retrieve an updated security object.
         """
-        logging.info("Updating {}'s securities.".format(self.getUserName()))
         
         t = self.getTrader()
         ownedSummary = t.securities_owned()['results']
@@ -175,7 +160,6 @@ class User(Updatable, XenoObject, QObject):
         """
             When a security is done being gathered by the task manager, add it to the existing set
         """
-        logging.debug("Appending Stock to user's list of stocks")
         print(future.result())
         #self.acquireLock("stockData")
         self.getSecuritiesOwned().add(future.result())

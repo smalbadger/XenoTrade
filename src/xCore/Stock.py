@@ -26,7 +26,6 @@ class Stock(XenoObject):
         self.fundamentals = t.fundamentals(url=self.instrument['fundamentals'])
         self.quote = self.trader.quote_data(self.symbol())
         #self.popularity = self.trader.get_popularity(self.symbol())
-        logging.info("New Stock object created: {}".format(self.symbol()))
 
     def __hash__(self):
         return self.symbol().__hash__()
@@ -40,21 +39,16 @@ class Stock(XenoObject):
             return False
 
     def updateAllProperties(self):
-        logging.info("Updating all {} Stock Object properties.".format(self.name()))
         if self.position:
             # TODO: (A) Figure out how to update the position
             pass
 
-        logging.debug("Updating instrument properties")
         self.instrument = self.trader.instrument(self.instrumentURL())
         
-        logging.debug("Updating fundamental properties")
         self.fundamentals = self.trader.fundamentals(self.fundamentalsURL())
         
-        logging.debug("Updating quote properties")
         self.quote = self.trader.quote_data(self.symbol())
         
-        logging.debug("Updating popularity")
         self.popularity = self.trader.get_popularity(self.symbol())
 
 
@@ -148,7 +142,6 @@ class Stock(XenoObject):
 
 
     def getAllInfo(self):
-        logging.info("Getting all stock info")
         allDict = {}
         for d in (self.position, self.instrument, self.fundamentals, self.quote):
             try:

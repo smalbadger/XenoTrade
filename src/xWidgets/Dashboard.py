@@ -27,7 +27,6 @@ class Dashboard(Updatable, QGroupBox):
     def __init__(self, kernel, parent=None):
         super(Dashboard, self).__init__()
         
-        logging.info("Initializing Dashboard Widget.")
         self.kernel = kernel
         self.parent = parent
         self.initUI()
@@ -36,25 +35,21 @@ class Dashboard(Updatable, QGroupBox):
         self.kernel.getUpdateGraph().addUpdatable(self)
         
     def initUI(self):
-        logging.debug("Initializing the Dashboard's user interface.")
         self.createElements()
         self.createLayout()
         self.createActions()
         
     def createElements(self):
-        logging.debug("Creating the Dashboard's elements.")
         self.scrollArea = QScrollArea()
         self.stockListWidget = StockList(self.kernel, self)
             
     def createLayout(self):
-        logging.debug("Creating the Dashboard's layout.")
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
         self.layout.addWidget(self.scrollArea)
         self.scrollArea.setWidget(self.stockListWidget)
         
     def createActions(self):
-        logging.debug("Connecting the Dashboard's signals and slots.")
         pass
         
     def __str__(self):

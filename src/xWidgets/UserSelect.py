@@ -11,14 +11,12 @@ from xWidgets.UserTile import UserTile
 
 class UserSelect(QWidget):
     def __init__(self, kernel, parent=None):
-        logging.info("Initializing the login widget.")
         super(UserSelect, self).__init__(parent)
         self.kernel = kernel
         self.parent = parent
         self.initUI()
     
     def initUI(self):
-        logging.debug("Initializing the login widget UI.")
         self.createElements()
         self.createLayout()
         self.createActions()
@@ -26,7 +24,6 @@ class UserSelect(QWidget):
         self.hideLoginForm()
         
     def createElements(self):
-        logging.debug("Initializing the login widget's sub-widgets")
         self.userButtons = [UserTile(u, self) for u in self.kernel.getAllUsers()]
         for b, u in zip(self.userButtons, self.kernel.getAllUsers()):
             b.setProfilePicture(self.kernel.getUsersDir()+u+'/profile/profile_pic.png')
@@ -49,7 +46,6 @@ class UserSelect(QWidget):
         self.selectedUser = None
         
     def createLayout(self):
-        logging.debug("Initializing the login widget's layout")
         self.existingUsersLayout = QHBoxLayout()
         self.existingUsersLayout.addStretch()
         for ub in self.userButtons:
@@ -84,7 +80,6 @@ class UserSelect(QWidget):
         self.layout.addStretch()
         
     def createActions(self):
-        logging.debug("Connecting the login widget's signals and slots")
         self.newUserButton.clicked.connect(self.revealNewUserForm)
         self.nevermindButton.clicked.connect(self.hideNewUserForm)
         self.submitNewUserButton.clicked.connect(self.submitNewUserRequest)
@@ -95,7 +90,6 @@ class UserSelect(QWidget):
             )
         
     def revealNewUserForm(self):
-        logging.info("Revealing the new user form.")
         self.hideLoginForm()
         self.newUserButton.hide()
         self.newUserNameField.show()
@@ -105,7 +99,6 @@ class UserSelect(QWidget):
         self.nevermindButton.show()
         
     def hideNewUserForm(self):
-        logging.info("Hiding the new user form")
         self.newUserButton.show()
         self.newUserNameErrorLabel.hide()
         self.newPasswordErrorLabel.hide()
@@ -116,7 +109,6 @@ class UserSelect(QWidget):
         self.nevermindButton.hide()
         
     def revealLoginForm(self, user):
-        logging.info("Revealing the login form")
         self.hideNewUserForm()
         self.selectedUser = user
         self.existingUserLoginButton.show()
@@ -124,14 +116,12 @@ class UserSelect(QWidget):
         self.existingUserLoginField.show()
         
     def hideLoginForm(self):
-        logging.info("Hiding the login form")
         self.selectedUser = None
         self.existingUserLoginButton.hide()
         self.existingUserLoginErrorLabel.hide()
         self.existingUserLoginField.hide()
         
     def submitNewUserRequest(self):
-        logging.info("submitting request to add new account.")
         userName = self.newUserNameField.text()
         pwd = self.newUserPasswordField.text()
         conf_pwd = self.newUserConfirmPasswordField.text()
@@ -154,7 +144,6 @@ class UserSelect(QWidget):
         if err_msg != '':
             return
         
-        logging.info("Verifying that {} is a Robinhood user".format(userName))
         err = self.kernel.addUser(userName, pwd)
         
         if err:
@@ -166,7 +155,6 @@ class UserSelect(QWidget):
             self.parent.loadApplication()
         
     def login(self):
-        logging.info("Submitting login request for {}.".format(self.selectedUser))
         assert(self.selectedUser != None)
         pwd = self.existingUserLoginField.text()
         if not self.kernel.switchUser(self.selectedUser, pwd):

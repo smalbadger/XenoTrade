@@ -20,7 +20,6 @@ from xCore.abstract import XenoObject
 
 class Kernel(XenoObject):
     def __init__(self, app, user=None):
-        logging.info("Initializing the XenoTrade kernel")
         XenoObject.__init__(self)
 
         self.setApp(app)
@@ -60,7 +59,6 @@ class Kernel(XenoObject):
         return self.getBaseDir() + 'Users/'
         
     def getAllUsers(self):
-        logging.debug("Getting a list of all users on this machine.")
         users = os.listdir(self.getUsersDir())
         users.remove('.__template__')
         if users == None:
@@ -71,19 +69,15 @@ class Kernel(XenoObject):
     #                                SETTERS
     ###############################################################################
     def setApp(self, app):
-        logging.debug("Setting the kernel's application.")
         self._app = app
         
     def setCurrentUser(self, user):
-        logging.info("Setting the kernel's current user.")
         self._currentUser = user
         
     def setTaskManager(self, taskManager):
-        logging.debug("Setting the kernel's task manager.")
         self._taskManager = taskManager
         
     def setUpdateManager(self, updateManager):
-        logging.debug("Setting the kernel's update manager.")
         self._updateManager = updateManager
         
     def setUpdateGraph(self, graph):
@@ -93,32 +87,24 @@ class Kernel(XenoObject):
     #                          USER MANAGEMENT METHODS
     ###########################################################################
     def switchUser(self, username, password):
-        logging.info("Attempting to switch user to {}.".format(username))
         newUser = User(self, self.getUsersDir() + username + '/')
         if newUser.verify(password):
             self.setCurrentUser(newUser)
-        logging.info("Current user: {}".format(self.getCurrentUser()))
         return self.getCurrentUser() == newUser
         
     
     def addUser(self, username, password):
-        logging.info("Attempting to add user {}.".format(username))
         if self.switchUser(username, password):
             template = self.getUsersDir() + '.__template__/'
             newUserDir = self.getUsersDir() + username + '/'
             os.mkdir(newUserDir)
             copy_tree(template, newUserDir)
-            logging.info("User {} was successfully created".format(username))
         else:
-            logging.info("creation of user {} failed.".format(username))
         
         
     def userExists(self, user):
-        logging.debug("Checking for {} in the current users.".format(user))
         if user in self.getAllUsers():
-            logging.debug("{} was found".format(user))
             return True
-        logging.debug("{} was not found".format(user))
 
 if __name__ == '__main__':
     k = Kernel()

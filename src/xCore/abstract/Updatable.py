@@ -72,23 +72,18 @@ class Updatable():
     #                                GETTERS
     ###############################################################################
     def getLastUpdateTime(self):
-        logging.debug("Getting last update time.")
         return self._lastUpdateTime
         
     def getUpdateFunctionList(self):
-        logging.debug("Getting the update function list.")
         return self._updateFunctionList
 
     def getUpdateFrequency(self):
-        logging.debug("Getting the update frequency.")
         return self._updateFrequency
         
     def getParents(self):
-        logging.debug("Getting the parents.")
         return self._parents
         
     def getChildren(self):
-        logging.debug("Getting the children.")
         return self._children
         
     ###############################################################################
@@ -101,22 +96,18 @@ class Updatable():
         self._children = []
     
     def setLastUpdateTime(self, t):
-        logging.debug("Setting the last update time: {}".format(t))
         self._lastUpdateTime = t
     
     def setUpdateFunctionList(self, fnList):
-        logging.debug("Setting the update function list: {}".format(fnList))
         self._updateFunctionList = fnList
         
     def setUpdateFrequency(self, freq):
-        logging.debug("Setting update frequency: {}".format(freq))
         if freq == None:
             self._updateFrequency = GS.UPDATE_FREQUENCY
         else:
             self._updateFrequency = freq
         
     def addUpdateFunction(self, Fn, *args, **kwargs):
-        logging.debug("Adding new function to update function list: {}".format(Fn))
         self.getUpdateFunctionList().append((Fn, args, kwargs))
         
     def addParent(self, parent):

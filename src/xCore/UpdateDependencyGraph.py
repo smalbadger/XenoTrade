@@ -45,11 +45,9 @@ class UpdateDependencyGraph(XenoObject, QObject):
     #                                GETTERS
     ############################################################################
     def getUpdateGraphRoots(self):
-        logging.debug("Getting all update graph root nodes")
         return self._updatableRoots
         
     def getKernel(self):
-        logging.debug("Getting the UpdateManager's kernel")
         return self._kernel
     
     ############################################################################
@@ -57,19 +55,15 @@ class UpdateDependencyGraph(XenoObject, QObject):
     ############################################################################
     def addUpdatable(self, newUpdatable):
         if newUpdatable.getParents() == []:
-            logging.debug("Adding new updatable to the update graph as ROOT")
             self.getUpdateGraphRoots().append(newUpdatable)
         else:
-            logging.debug("Adding new updatable to the update graph as CHILD")
             for parent in newUpdatable.getParents():
                 parent.addChild(newUpdatable)
     
     def resetUpdateGraph(self):
-        logging.debug("Resetting the update graph.")
         self._updatableRoots = []
         
     def setKernel(self, kernel):
-        logging.debug("Setting the UpdateManager's kernel")
         self._kernel = kernel
     
     ############################################################################
@@ -119,7 +113,6 @@ class UpdateDependencyGraph(XenoObject, QObject):
         pass
                       
     def printAllUpdatables(self):
-        logging.info("Printing the Update Dependency Graph")
         print("Printing all nodes in update graph:")
         workQueue = queue.Queue()    
         for node in self.getUpdateGraphRoots():

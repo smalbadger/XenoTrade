@@ -44,7 +44,6 @@ class UpdateManager(QThread, XenoObject):
     ############################################################################
 
     def getRunStatus(self):
-        #logging.debug("Getting run status")
         return self._runStatus
         
     def getUpdateGraph(self):
@@ -54,11 +53,9 @@ class UpdateManager(QThread, XenoObject):
     ############################################################################
 
     def setRunStatus(self, status):
-        logging.debug("Setting run status: {}".format(status))
         self._runStatus = status
         
     def setUpdateGraph(self, updateGraph):
-        logging.debug("Setting update graph")
         self._updateGraph = updateGraph
         self._updateGraph.updateComplete.connect(self.on_nodeUpdateComplete)
         self.updateStart.connect(self._updateGraph.on_updateSignal)
@@ -71,7 +68,6 @@ class UpdateManager(QThread, XenoObject):
         self.updated = updated
     
     def run(self):
-        logging.debug("Updating all updatables... (continuous)")
         roots, matrix = self.getUpdateGraph().getAdjacencyMatrix()
         self.setRunStatus(True)
         workQueue = queue.Queue()    

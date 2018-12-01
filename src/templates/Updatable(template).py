@@ -110,22 +110,18 @@ class -----(-----):
         self._children = []
     
     def setLastUpdateTime(self, t):
-        logging.debug("Setting the last update time: {}".format(t))
         self._lastUpdateTime = t
     
     def setUpdateFunctionList(self, fnList):
-        logging.debug("Setting the update function list: {}".format(fnList))
         self._updateFunctionList = fnList
         
     def setUpdateFrequency(self, freq):
-        logging.debug("Setting update frequency: {}".format(freq))
         if freq == None:
             self._updateFrequency = GS.UPDATE_FREQUENCY
         else:
             self._updateFrequency = freq
         
     def addUpdateFunction(self, Fn, *args, **kwargs):
-        logging.debug("Adding new function to update function list: {}".format(Fn))
         self.getUpdateFunctionList().append((Fn, args, kwargs))
         
     def addParent(self, parent):
@@ -146,21 +142,16 @@ class -----(-----):
             shouldUpdate = True
             
         if shouldUpdate:
-            logging.debug("We should update: {}".format(self.__str__()))
             self.setLastUpdateTime(time())
             updateFns = self.getUpdateFunctionList()
             print(self)
             if len(updateFns) > 0:
                 # iterate through the update functions that the user has set and call them
                 for fn, args, kwargs in self.getUpdateFunctionList():
-                    logging.debug("Running the update function: {}".format(fn))
                     try:
                         fn(*args, **kwargs)
-                        logging.debug("Successfully ran the update function: {}".format(fn))
                     except Exception as e:
-                        logging.debug("Failed to run the update function: {}".format(fn))
                         print(e)
-        logging.debug("done updating {}".format(self.__str__()))
         self.updateComplete.emit(shouldUpdate)
     #<<<<<<<<<<
         

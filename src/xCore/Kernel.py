@@ -100,7 +100,7 @@ class Kernel(XenoObject):
             os.mkdir(newUserDir)
             copy_tree(template, newUserDir)
         else:
-        
+            pass
         
     def userExists(self, user):
         if user in self.getAllUsers():

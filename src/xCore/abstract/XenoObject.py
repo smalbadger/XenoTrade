@@ -11,6 +11,7 @@ class XenoObject():
     
     def addLock(self, name):
         if name in self.locks:
+            pass
         self.locks[name] = threading.RLock()
     
     def acquireLock(self, name):

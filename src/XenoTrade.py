@@ -48,6 +48,7 @@ class XenoTradeGUI(QMainWindow):
         try:
             err = self.kernel.getCurrentUser().logout()
         except:
+            pass
         sys.exit(0)
 
 
@@ -72,7 +73,11 @@ def setAppStyle(app):
 
 def setupLogging(args):
     logFile = "../logbook/XenoTrade.log"
-    open(logFile,"w").close()   # clears log file
+    with open(logFile,"w") as f:
+        f.write("{}{}".format("="*80, "\n"))
+        f.write("{} {} {}{}".format("="*35,"NEW  LOG","="*35,"\n"))
+        f.write("{}{}".format("="*80, "\n"))
+        f.close()   # clears log file
     
     if "--logging-level" in args:
         lvlStr = ""

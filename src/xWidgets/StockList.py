@@ -57,11 +57,11 @@ class StockList(Updatable, QGroupBox):
         
         self.hide()
         self.show()
-        '''
+        
         for stock in self.stockWidgets:
             stock.hide()
             stock.show()
-        '''
+        
     def __str__(self):
         return "StockList widget"
             

@@ -159,7 +159,6 @@ class User(Updatable, XenoObject, QObject):
             retrieve a summary of all securities owned. then iterate through the summary and
             retrieve an updated security object.
         """
-        
         logging.info("Updating {}'s securities.".format(self.getUserName()))
         
         t = self.getTrader()

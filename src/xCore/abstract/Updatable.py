@@ -24,7 +24,7 @@ How To Use:
             
 Why parents and children?
             To find out more about this, please see the UpdateManager documentation.
-         
+
 Instructions:
             Because multiple inheritance in PyQt is not allowed, there are a few
             small things you need to add to your subclass.
@@ -153,4 +153,3 @@ class Updatable():
         
         # self.updateComplete.emit(shouldUpdate) Should be called by subclass instead
         return shouldUpdate
-

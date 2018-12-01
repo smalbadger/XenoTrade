@@ -33,7 +33,6 @@ class XenoTradeGUI(QMainWindow):
             m = """
             Please be patient while we retrieve your information from Robinhood
             """
-            
             # do some type of animation here while stuff is loading
             
             self.initDashboardGUI()

@@ -42,6 +42,7 @@ class UpdateManager(QThread, XenoObject):
     ############################################################################
     #                                GETTERS
     ############################################################################
+
     def getRunStatus(self):
         #logging.debug("Getting run status")
         return self._runStatus
@@ -51,6 +52,7 @@ class UpdateManager(QThread, XenoObject):
     ############################################################################
     #                                SETTERS
     ############################################################################
+
     def setRunStatus(self, status):
         logging.debug("Setting run status: {}".format(status))
         self._runStatus = status
@@ -89,4 +91,5 @@ class UpdateManager(QThread, XenoObject):
                     for i in range(len(matrix[nodeID])):
                         if matrix[nodeID][i] == 1:
                             workQueue.put(i)
+
 

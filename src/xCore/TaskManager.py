@@ -32,13 +32,6 @@ class TaskManager(XenoObject):
         self.resetThreadPool()
         self.resetNetworkTaskHistory()
         
-        '''
-        self.setComputationWorkQueue(Queue())
-        self.setNumProcesses(numProcesses)
-        self.setNumActiveProcesses(0)
-        self.resetProcessPool()
-        '''
-        
         self._waitingTasks = {} # PRIVATE- don't touch this (that's why there's no setter or getter)
 
     def __del__(self):

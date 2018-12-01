@@ -67,12 +67,11 @@ class Stock(QGroupBox):
         
     def createElements(self):
         logging.debug("creating the stock widget's elements.")
-        
         self.name = QLabel()
         self.symbol = QLabel()
         self.price = QLabel()
         self.percentChange = QLabel()
-        
+       
     def createLayout(self):
         logging.debug("creating the stock widget's layout")
         self.nameLayout = QVBoxLayout()

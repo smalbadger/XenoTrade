@@ -47,14 +47,19 @@ class StockList(Updatable, QGroupBox):
     def updateStockWidgets(self):
         print("Mama thread: {}".format(threading.get_ident()))
         self.createElements()
+        print("elements created")
         self.createLayout()
+        print("layout created")
         
         self.hide()
+        print("hidden")
         self.show()
+        print("shown")
         
         for stock in self.stockWidgets:
             stock.hide()
             stock.show()
+        print("flashed")
         
     def __str__(self):
         return "StockList widget"
@@ -62,3 +67,14 @@ class StockList(Updatable, QGroupBox):
     def runUpdates(self):
         updateStatus = super().runUpdates()
         self.updateComplete.emit(updateStatus)
+        
+if __name__ == "__main__":
+    # imports 
+    from PySide2.QtWidgets import QApplication
+    import sys
+    
+    app = QApplication(sys.argv)
+    widget = StockList()
+    widget.updateText(name="XenoTrade", symbol="XTL", price=100.00, change=.46)
+    widget.show()
+    sys.exit(app.exec_())

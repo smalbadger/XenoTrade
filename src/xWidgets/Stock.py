@@ -95,16 +95,22 @@ class Stock(QGroupBox):
     def setStock(self, stock):
         self.stock = stock
     
-    def updateText(self):
-        if self.stock != None:
-            name = self.stock.simpleName()
-            if name == None:
-                name = ""
-            self.name.setText("<i>{}</i>".format(name))
-            self.symbol.setText("<strong>{}</strong>".format(self.stock.symbol()))
-            self.price.setText("${:.2f}".format(self.stock.lastTradePrice()))
-            self.percentChange.setText("{:.3f}%".format(self.stock.percentChange()))
-
+    def updateText(self, **kwargs):
+        if kwargs == {}:
+            if self.stock != None:
+                name = self.stock.simpleName()
+                if name == None:
+                    name = ""
+                self.name.setText("<i>{}</i>".format(name))
+                self.symbol.setText("<strong>{}</strong>".format(self.stock.symbol()))
+                self.price.setText("${:.2f}".format(self.stock.lastTradePrice()))
+                self.percentChange.setText("{:.3f}%".format(self.stock.percentChange()))
+        else:
+            self.name.setText("<i>{}</i>".format(kwargs["name"]))
+            self.symbol.setText("<strong>{}</strong>".format(kwargs["symbol"]))
+            self.price.setText("${:.2f}".format(kwargs["price"]))
+            self.percentChange.setText("{:.3f}%".format(kwargs["change"]))
+            
     def updateStyle(self):
         styleStr = Stock.baseStyle
         pc = self.stock.percentChange()
@@ -119,3 +125,14 @@ class Stock(QGroupBox):
     def createActions(self):
         #NOTE: No actions are set 
         pass
+        
+if __name__ == "__main__":
+    # imports 
+    from PySide2.QtWidgets import QApplication
+    import sys
+    
+    app = QApplication(sys.argv)
+    widget = Stock()
+    widget.updateText(name="XenoTrade", symbol="XTL", price=100.00, change=.46)
+    widget.show()
+    sys.exit(app.exec_())

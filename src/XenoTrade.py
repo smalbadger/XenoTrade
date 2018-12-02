@@ -25,6 +25,8 @@ class XenoTradeGUI(QMainWindow):
         self.setCentralWidget(widget)
 
     def loadApplication(self):
+        logging.info("Loading Application")
+        assert(self.kernel.getCurrentUser() != None)
         if self.kernel.getCurrentUser().getVerificationStatus() == False:
             return
         else:
@@ -118,6 +120,7 @@ if __name__ == '__main__':
     kernel = Kernel(app)
     frame = XenoTradeGUI(kernel)
     frame.show()
+    logging.info("Starting XenoTrade Application")
     sys.exit(app.exec_())
     
     

@@ -128,13 +128,12 @@ class User(Updatable, XenoObject, QObject):
         '''
         if self.getVerificationStatus():
             return True
-
-        status = self.getTrader().login(username=self.getUserName(), password=pwd)
-        self.setVerificationStatus(status)
-        if status:
-            return True
-        else:
-            return False
+        try:
+            status = self.getTrader().login(username=self.getUserName(), password=pwd)
+            self.setVerificationStatus(status)
+            return status
+        except:
+            logging.error("Credentials verification failed for user: {}".format(self.getUserName()))
         
     ###############################################################################
     #                              UPDATE METHODS
@@ -152,7 +151,8 @@ class User(Updatable, XenoObject, QObject):
             tm.addNetworkTask(Stock, self.updateSecuritiesOwned_CALLBACK, t, pos=ownedSummary[i])
             
         while len(self.getSecuritiesOwned()) != len(ownedSummary):
-            sleep(0.5) #remove this later
+            #sleep(0.5) #remove this later
+            pass
         
     def updateSecuritiesOwned_CALLBACK(self, future):
         # TODO: pass in the result instead of the future.

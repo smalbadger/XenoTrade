@@ -144,15 +144,13 @@ class UserSelect(QWidget):
         if err_msg != '':
             return
         
-        err = self.kernel.addUser(userName, pwd)
-        
-        if err:
-            self.newUserNameErrorLabel.setText(err)
-            self.newPasswordErrorLabel.setText(err)
-            self.newUserNameErrorLabel.show()
-            self.newPasswordErrorLabel.show()
-        else:
+        if self.kernel.addUser(userName, pwd):
             self.parent.loadApplication()
+        else:
+            err = "Error: User Creation failed.\nPlease use your Robinhood Credentials"
+            self.newPasswordErrorLabel.setText(err)
+            self.newPasswordErrorLabel.show()
+            
         
     def login(self):
         assert(self.selectedUser != None)

@@ -32,33 +32,47 @@ class StockList(Updatable, QGroupBox):
         
     def createElements(self):
         self.stockWidgets = []
+        self.securities = set()
         for security in self.kernel.getCurrentUser().getSecuritiesOwned():
+            self.securities.add(security)
             self.stockWidgets.append(Stock(security, self))
             
     def createLayout(self):
         self.layout = QVBoxLayout()
-        self.setLayout(self.layout)
         for w in self.stockWidgets:
             self.layout.addWidget(w)
-        
+        self.setLayout(self.layout) 
+               
     def createActions(self):
         pass
          
     def updateStockWidgets(self):
-        print("Mama thread: {}".format(threading.get_ident()))
-        self.createElements()
-        print("elements created")
-        self.createLayout()
-        print("layout created")
+        #print("Mama thread: {}".format(threading.get_ident()))
+        #self.createElements()
+        #print("elements created")
+        #self.createLayout()
+        #print("layout created")
         
+        
+        for security in self.kernel.getCurrentUser().getSecuritiesOwned():
+            if security not in self.securities:
+                self.securities.add(security)
+                newWidget = Stock(security, self)
+                self.stockWidgets.append(newWidget)
+                self.layout.addWidget(newWidget)
+        
+        '''
         self.hide()
         print("hidden")
         self.show()
         print("shown")
-        
+        '''
         for stock in self.stockWidgets:
-            stock.hide()
-            stock.show()
+            print("flash another stock")
+            #stock.hide()
+            #stock.show()
+            stock.update()
+        self.update()
         print("flashed")
         
     def __str__(self):

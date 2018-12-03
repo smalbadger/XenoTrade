@@ -44,7 +44,6 @@ class ButtonList(QGroupBox):
         #self.numElements += 1
         
     def update(self):
-        
         print(self.lineEdit.text())
         n = int(self.lineEdit.text())
         for i in reversed(range(self.layout.count())): 

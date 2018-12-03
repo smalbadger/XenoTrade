@@ -55,17 +55,16 @@ class StockList(Updatable, QGroupBox):
         
         
         for security in self.kernel.getCurrentUser().getSecuritiesOwned():
+            # remove old widgets
+            for i in reversed(range(self.layout.count())): 
+                self.layout.itemAt(i).widget().setParent(None)
+            
+            # create new widgets
             if security not in self.securities:
                 self.securities.add(security)
                 newWidget = Stock(security, self)
                 self.stockWidgets.append(newWidget)
                 self.layout.addWidget(newWidget)
-        
-        '''
-        self.hide()
-        print("hidden")
-        self.show()
-        print("shown")
         '''
         for stock in self.stockWidgets:
             print("flash another stock")
@@ -74,6 +73,7 @@ class StockList(Updatable, QGroupBox):
             stock.update()
         self.update()
         print("flashed")
+        '''
         
     def __str__(self):
         return "StockList widget"

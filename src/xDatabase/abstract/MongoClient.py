@@ -2,12 +2,15 @@
 Class:      MongoClient
 Author(s):  Sam Badger
 Date:       December 4, 2018
-Type:       FINAL
+Type:       ABSTRACT
 Description:
             Communicate with MongoDB
             
 Notes:      If it hangs forever when you make a query, try starting the service:
                 > sudo service mongodb start
+            
+            If it's already started, try:
+                > sudo service mongodb restart
 '''
 
 import os
@@ -21,14 +24,13 @@ class MongoClient():
     def __init__(self):
         super().__init__()
         
-        self.initClient()
+        self.mongoConnect()
         
-        
-    
-    def initClient(self):
+    def mongoConnect(self):
+        ''' create the mongoDB client '''
         try:
-            self._client = pymongo.MongoClient('localhost', 27017)
-        except:
+            self._client = pymongo.MongoClient('localhost', 27017, serverSelectionTimeoutMS=5)
+        except pymongo.errors.ConnectionFailure:
             # logging.critical("Failed to create mongo client. Make sure MongoDB is installed and started.")
             print("Error: Couldn't connect to mongo instance")
             sys.exit(2)
@@ -65,18 +67,23 @@ class MongoClient():
         ''' get the number of all documents fitting the criteria '''
         return self._collection.count_documents(criteria)
         
+    def testConnection(self):
+        try:
+            self.findDocument()
+        except pymongo.errors.ServerSelectionTimeoutError:
+            # logging.critical("Timeout: couldn't communicate with mongo instance. make sure MongoDB is installed and started.")
+            print("Timeout Error: Couldn't communicate with mongo instance. Make sure MongoDB is installed and connected.")
+            sys.exit(2)
         
         
                 
 
 if __name__ == "__main__":
+    # testing connection
     client = MongoClient()
     client.switchDB("XenoTrade")
     client.switchCollection("users.smalbadger")
-    client.insertDocument({"Date Created": "October 4, 2018"})
-    for i in client.findDocuments():
-        print(i)
-    print(client.countDocuments())
+    client.testConnection()
     
     
     

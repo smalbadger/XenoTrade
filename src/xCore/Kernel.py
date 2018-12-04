@@ -90,17 +90,25 @@ class Kernel(XenoObject):
         newUser = User(self, self.getUsersDir() + username + '/')
         if newUser.verify(password):
             self.setCurrentUser(newUser)
-        return self.getCurrentUser() == newUser
+            logging.info("User logged in successfully: {}".format(newUser))
+            return True
+        else:
+            logging.info("User login attempt failed: {}".format(newUser))
+            return False
         
     
     def addUser(self, username, password):
+        logging.info("Creating new user: {}".format(username))
         if self.switchUser(username, password):
+            logging.info("User created successfully: {}".format(self.getCurrentUser()))
             template = self.getUsersDir() + '.__template__/'
             newUserDir = self.getUsersDir() + username + '/'
             os.mkdir(newUserDir)
             copy_tree(template, newUserDir)
+            return True
         else:
-            pass
+            logging.info("User creation failed: {}".format(username))
+            return False
         
     def userExists(self, user):
         if user in self.getAllUsers():

@@ -1,28 +1,21 @@
-import logging
-
-from PySide2.QtWidgets import QPushButton
-from PySide2.QtWidgets import QHBoxLayout
 from PySide2.QtWidgets import QVBoxLayout
 from PySide2.QtWidgets import QGroupBox
 from PySide2.QtWidgets import QLabel
 from PySide2.QtCore import Signal
 
-from xWidgets.Stock import Stock
-from xCore.abstract.Updatable import Updatable
+class MyLabel(QGroupBox):
+    def __init__(self, text):
+        QGroupBox.__init__(self)
+        self.label = QLabel(text)
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.label)
+        self.setLayout(self.layout)
 
-import time
-import threading
-
-class StockList(Updatable, QGroupBox):
+class StockList(QGroupBox):
     updateComplete = Signal(bool) #emit this signal when an update is done.
     
-    def __init__(self, kernel, parent):
+    def __init__(self):
         super(StockList, self).__init__()
-        self.kernel = kernel
-        self.addParent(parent)
-        self.addUpdateFunction(self.updateStockWidgets)
-        self.addUpdateFunction(self.update)
-        self.kernel.getUpdateGraph().addUpdatable(self)
         self.initUI()
         
     def initUI(self):
@@ -32,10 +25,8 @@ class StockList(Updatable, QGroupBox):
         
     def createElements(self):
         self.stockWidgets = []
-        self.securities = set()
-        for security in self.kernel.getCurrentUser().getSecuritiesOwned():
-            self.securities.add(security)
-            self.stockWidgets.append(Stock(security))
+        for i in range(7):
+            self.stockWidgets.append(MyLabel("Label {}".format(i)))
             
     def createLayout(self):
         self.layout = QVBoxLayout()
@@ -65,6 +56,15 @@ class StockList(Updatable, QGroupBox):
     def runUpdates(self):
         updateStatus = super().runUpdates()
         self.updateComplete.emit(updateStatus)
+        
+class Dashboard(QGroupBox):
+    def __init__(self):
+        QGroupBox.__init__(self)
+        self.stockList = StockList()
+        self.layout = QHBoxLayout()
+        self.setLayout(self.layout)
+        self.layout.addStretch()
+        self.layout.addWidget(self.stockList)
         
 if __name__ == "__main__":
     # imports 

@@ -18,21 +18,18 @@ from PySide2.QtCore import Signal
 from pprint import pprint
 import logging
 
+import xCore.Globals as GS
 from xCore.abstract.Updatable import Updatable
 from xCore.abstract.XenoObject import XenoObject
 from xGUI import StockListWidget
 
-class DashboardWidget(Updatable, QGroupBox):
+
+class DashboardWidget(QGroupBox):
     updateComplete = Signal(bool) #emit this signal when an update is done.
-    def __init__(self, kernel, parent=None):
+    def __init__(self, ):
         super().__init__()
         
-        self.kernel = kernel
-        self.parent = parent
         self.initUI()
-        self.addParent(kernel.getCurrentUser())
-        # add update function here
-        self.kernel.getUpdateGraph().addUpdatable(self)
         
     def initUI(self):
         self.createElements()
@@ -41,7 +38,7 @@ class DashboardWidget(Updatable, QGroupBox):
         
     def createElements(self):
         self.scrollArea = QScrollArea()
-        self.stockListWidget = StockList(self.kernel, self)
+        self.stockListWidget = StockList()
             
     def createLayout(self):
         self.layout = QVBoxLayout()
@@ -54,7 +51,3 @@ class DashboardWidget(Updatable, QGroupBox):
         
     def __str__(self):
         return "Dashboard Widget"
-        
-    def runUpdates(self):
-        updateStatus = super().runUpdates()
-        self.updateComplete.emit(updateStatus)

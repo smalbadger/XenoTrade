@@ -13,22 +13,26 @@ from xGUI.UserSelectWidget import UserSelectWidget
 from xGUI.DashboardWidget import DashboardWidget
 from xGUI.LoadingScreenWidget import LoadingScreenWidget
 
+import xCore.Globals as GS
+
 class XenoTradeGUI(QMainWindow):
-    def __init__(self, kernel):
+    def __init__(self):
         super().__init__()
         self.kernel = kernel
         self.showMaximized()
         self.setWindowTitle("XenoTrade")
-        self.initLoginGUI(kernel)
+        self.initLoginGUI()
 
-    def initLoginGUI(self, kernel):
+    def initLoginGUI(self):
+        kernel = GS.KERNEL
         widget = UserSelectWidget(kernel.getAllUsers(), kernel.getUsersDir())
         self.setCentralWidget(widget)
 
     def loadApplication(self):
         logging.info("Loading Application")
-        assert(self.kernel.getCurrentUser() != None)
-        if self.kernel.getCurrentUser().getVerificationStatus() == False:
+        kernel = GS.KERNEL
+        assert(kernel.getCurrentUser() != None)
+        if kernel.getCurrentUser().getVerificationStatus() == False:
             return
         else:
             n = self.kernel.getCurrentUser().getUserName()

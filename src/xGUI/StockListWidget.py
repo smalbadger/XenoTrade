@@ -8,21 +8,12 @@ from PySide2.QtWidgets import QLabel
 from PySide2.QtCore import Signal
 
 from xGUI import StockWidget
-from xCore.abstract.Updatable import Updatable
+import xCore.Globals as GS
 
-import time
-import threading
-
-class StockListWidget(Updatable, QGroupBox):
-    updateComplete = Signal(bool) #emit this signal when an update is done.
-    
-    def __init__(self, kernel, parent):
+class StockListWidget(QGroupBox):
+    def __init__(self):
         super().__init__()
-        self.kernel = kernel
-        self.addParent(parent)
-        self.addUpdateFunction(self.updateStockWidgets)
-        self.addUpdateFunction(self.update)
-        self.kernel.getUpdateGraph().addUpdatable(self)
+        
         self.initUI()
         
     def initUI(self):
@@ -32,16 +23,23 @@ class StockListWidget(Updatable, QGroupBox):
         
     def createElements(self):
         self.stockWidgets = []
-        self.securities = set()
-        for security in self.kernel.getCurrentUser().getSecuritiesOwned():
-            self.securities.add(security)
+        self.securities = []
+        kernel = GS.KERNEL
+        for security in kernel.getCurrentUser().getSecuritiesOwned():
+            self.securities.append(security)
             self.stockWidgets.append(Stock(security))
             
     def createLayout(self):
         self.layout = QVBoxLayout()
         for w in self.stockWidgets:
             self.layout.addWidget(w)
-        self.setLayout(self.layout) 
+        self.setLayout(self.layout)
+        
+    def addStockWidget(self):
+        pass
+        
+    def removeStockWidget(self):
+        pass
                
     def createActions(self):
         pass
@@ -49,8 +47,9 @@ class StockListWidget(Updatable, QGroupBox):
     def updateStockWidgets(self):
         for security in self.kernel.getCurrentUser().getSecuritiesOwned():
             # remove old widgets
-            for i in reversed(range(self.layout.count())): 
-                self.layout.itemAt(i).widget().setParent(None)
+            for w in self.stockWidgets:
+                w.setParent(None)
+             
             
             # create new widgets
             if security not in self.securities:

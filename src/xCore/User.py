@@ -7,35 +7,22 @@ Description:
 '''
 
 import logging
-from time import sleep, time
-
-from Robinhood import Robinhood
-from PySide2.QtCore import QObject, Signal
 
 from xCore.Stock import Stock
-from xCore.abstract import Updatable, XenoObject
+from xCore.abstract import XenoObject
 
-class User(Updatable, XenoObject, QObject):
-    updateComplete = Signal(bool) #emit this signal when an update is done.
+class User(XenoObject):
     
     def __init__(self, kernel, directory):
-        Updatable.__init__(self)
-        XenoObject.__init__(self)
-        QObject.__init__(self)
+        super().__init__()
         
-        self.setKernel(kernel)
-        self.setTrader()
         self.setUserDir(directory)
         self.setUserName(directory=directory)
         self.setVerificationStatus(False)
-        self.setSecuritiesOwned(set())
-        
-        self.addUpdateFunction(self.updateSecuritiesOwned)
-        self.getKernel().getUpdateGraph().addUpdatable(self)
 
     def __del__(self):
         try:
-            self.getTrader().logout()
+            #logout of all APIs and database
             self.setVerificationStatus(False)
         except:
             return "Logout failed (Unknown reason)"
@@ -90,11 +77,8 @@ class User(Updatable, XenoObject, QObject):
     def setUserDir(self, directory):
         self._userDir = directory
         
-    def setTrader(self):
-        self._trader = Robinhood()
-    
-    def setVerificationStatus(self, status):
-        self._verificationStatus = status
+    def setLoggedIn(self, status):
+        self._loggedIn = status
     
     def setSecuritiesOwned(self, securities):
         self._securitiesOwned = securities
@@ -114,65 +98,13 @@ class User(Updatable, XenoObject, QObject):
     ###############################################################################
     #                           LOG CURRENT USER IN
     ###############################################################################
-    def verify(self, pwd):
-        '''
-        Uses the user's username and the password provided to login to
-        the robinhood API.
-
-        Case 1) User is already logged in:
-                - return None
-        Case 2) User is not logged in, but entered false credentials:
-                - return error (see below)
-        Case 3) User is not logged in, but entered correct credentials:
-                - log user in and return None
-        '''
-        if self.getVerificationStatus():
+    def login(self, pwd):
+        ''' log the current user into the database '''
+        if self.loggedIn():
             return True
         try:
-            status = self.getTrader().login(username=self.getUserName(), password=pwd)
+            
             self.setVerificationStatus(status)
             return status
         except:
             logging.error("Credentials verification failed for user: {}".format(self.getUserName()))
-        
-    ###############################################################################
-    #                              UPDATE METHODS
-    ###############################################################################
-    def updateSecuritiesOwned(self):
-        """
-            retrieve a summary of all securities owned. then iterate through the summary and
-            retrieve an updated security object.
-        """
-        
-        t = self.getTrader()
-        ownedSummary = t.securities_owned()['results']
-        tm = self.getTaskManager()
-        for i in range(len(ownedSummary)):
-            tm.addNetworkTask(Stock, self.updateSecuritiesOwned_CALLBACK, t, pos=ownedSummary[i])
-            
-        while len(self.getSecuritiesOwned()) != len(ownedSummary):
-            #sleep(0.5) #remove this later
-            pass
-        
-    def updateSecuritiesOwned_CALLBACK(self, future):
-        # TODO: pass in the result instead of the future.
-        """
-            When a security is done being gathered by the task manager, add it to the existing set
-        """
-        print(future.result())
-        #self.acquireLock("stockData")
-        self.getSecuritiesOwned().add(future.result())
-        #self.releaseLock("stockData")
-        
-        
-    def runUpdates(self):
-        updateStatus = super().runUpdates()
-        self.updateComplete.emit(updateStatus)
-    ###############################################################################
-    #                           UTILITY METHODS
-    ###############################################################################
-    def print(self):
-        print("Username:", self.getUserName())
-        print("UserDir: ", self.getUserDir())
-        print("Verified:", self.getVerificationStatus())
-        

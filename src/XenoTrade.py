@@ -73,8 +73,7 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     setAppStyle(app)
-    kernel = Kernel(app)
-    frame = XenoTradeGUI(kernel)
+    frame = XenoTradeGUI()
     frame.show()
     logging.info("Starting XenoTrade Application")
     sys.exit(app.exec_())

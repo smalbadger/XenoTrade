@@ -28,7 +28,7 @@ import logging
 
 from PySide2.QtCore import Signal
 
-import xCore.GlobalSettings as GS
+import xCore.Globals as GS
 
 
 class -----(-----):

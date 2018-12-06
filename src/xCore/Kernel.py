@@ -11,7 +11,8 @@ import os
 import logging
 from distutils.dir_util import copy_tree
 
-import xCore.GlobalSettings as GS
+import xCore.Globals as GS
+
 from xCore.User import User
 from xCore.TaskManager import TaskManager
 from xCore.UpdateManager import UpdateManager
@@ -19,10 +20,9 @@ from xCore.UpdateDependencyGraph import UpdateDependencyGraph
 from xCore.abstract import XenoObject
 
 class Kernel(XenoObject):
-    def __init__(self, app, user=None):
+    def __init__(self, user=None):
         XenoObject.__init__(self)
 
-        self.setApp(app)
         self.setCurrentUser(user)
         self.setTaskManager(TaskManager(self, GS.NUM_THREADS, GS.NUM_PROCESSES))
         self.setUpdateGraph(UpdateDependencyGraph(self))
@@ -37,9 +37,7 @@ class Kernel(XenoObject):
     ###############################################################################
     #                                GETTERS
     ###############################################################################
-    def getApp(self):
-        return self._app
-        
+
     def getCurrentUser(self):
         return self._currentUser
         
@@ -68,9 +66,7 @@ class Kernel(XenoObject):
     ###############################################################################
     #                                SETTERS
     ###############################################################################
-    def setApp(self, app):
-        self._app = app
-        
+
     def setCurrentUser(self, user):
         self._currentUser = user
         

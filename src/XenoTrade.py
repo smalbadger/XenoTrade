@@ -1,3 +1,16 @@
+import logging
+import sys
+import os
+from time import sleep
+
+from PySide2 import QtGui
+from PySide2 import QtCore
+from PySide2.QtWidgets import QApplication
+from PySide2.QtGui import QPalette
+
+from xCore import Kernel
+from xGUI import XenoTradeGUI
+
 def setAppStyle(app):
     app.setStyle('Fusion')
     palette = QPalette()

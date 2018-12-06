@@ -20,12 +20,12 @@ import logging
 
 from xCore.abstract.Updatable import Updatable
 from xCore.abstract.XenoObject import XenoObject
-from xWidgets.StockList import StockList
+from xGUI import StockListWidget
 
-class Dashboard(Updatable, QGroupBox):
+class DashboardWidget(Updatable, QGroupBox):
     updateComplete = Signal(bool) #emit this signal when an update is done.
     def __init__(self, kernel, parent=None):
-        super(Dashboard, self).__init__()
+        super().__init__()
         
         self.kernel = kernel
         self.parent = parent

@@ -10,7 +10,7 @@ from PySide2.QtWidgets import QGroupBox
 
 import threading
 
-class Stock(QGroupBox):
+class StockWidget(QGroupBox):
     tickerAndNameWidth = 100
     priceWidth = 80
     percentChangeWidth = 80

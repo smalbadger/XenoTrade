@@ -12,14 +12,10 @@ import logging
 class UserTileWidget(QGroupBox):
     userSelected = Signal()
 
-    def __init__(self, text='', picPath=''):
+    def __init__(self, text=''):
         super().__init__()
         
         self.nameButton = QPushButton(text)
-        self.setProfilePicture(picPath)
-        
-        self.createLayout()
-        self.createActions()
         
     def setProfilePicture(self, picPath):
         self.profPic = QLabel('')
@@ -37,7 +33,7 @@ class UserTileWidget(QGroupBox):
         self.nameButton.clicked.connect(self.onUserSelected)
         
     def resize(self, width, height):
-        super(UserTile, self).resize(width, height)
+        super().resize(width, height)
         
     def onUserSelected(self):
         print("Selected User: {}".format(self.nameButton.text()))

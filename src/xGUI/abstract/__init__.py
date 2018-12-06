@@ -1,1 +1,1 @@
-from xWidgets.abstract.Widget import Widget
+from xGUI.abstract.Widget import Widget

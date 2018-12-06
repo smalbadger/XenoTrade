@@ -9,19 +9,20 @@ from PySide2.QtWidgets import QApplication, QMainWindow
 from PySide2.QtGui import QPalette
 
 from xCore import Kernel
-from xWidgets import UserSelect, Dashboard, LoadingScreen
+from xGUI.UserSelectWidget import UserSelectWidget
+from xGUI.DashboardWidget import DashboardWidget
+from xGUI.LoadingScreenWidget import LoadingScreenWidget
 
 class XenoTradeGUI(QMainWindow):
-    def __init__(self, kernel, parent=None):
-        super(XenoTradeGUI, self).__init__(parent)
+    def __init__(self, kernel):
+        super().__init__()
         self.kernel = kernel
         self.showMaximized()
         self.setWindowTitle("XenoTrade")
+        self.initLoginGUI(kernel)
 
-        self.initLoginGUI()
-
-    def initLoginGUI(self):
-        widget = UserSelect(kernel, self)
+    def initLoginGUI(self, kernel):
+        widget = UserSelectWidget(kernel.getAllUsers(), kernel.getUsersDir())
         self.setCentralWidget(widget)
 
     def loadApplication(self):

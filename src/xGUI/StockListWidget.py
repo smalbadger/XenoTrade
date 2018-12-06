@@ -7,17 +7,17 @@ from PySide2.QtWidgets import QGroupBox
 from PySide2.QtWidgets import QLabel
 from PySide2.QtCore import Signal
 
-from xWidgets.Stock import Stock
+from xGUI import StockWidget
 from xCore.abstract.Updatable import Updatable
 
 import time
 import threading
 
-class StockList(Updatable, QGroupBox):
+class StockListWidget(Updatable, QGroupBox):
     updateComplete = Signal(bool) #emit this signal when an update is done.
     
     def __init__(self, kernel, parent):
-        super(StockList, self).__init__()
+        super().__init__()
         self.kernel = kernel
         self.addParent(parent)
         self.addUpdateFunction(self.updateStockWidgets)

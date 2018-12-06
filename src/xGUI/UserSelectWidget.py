@@ -7,13 +7,13 @@ from PySide2.QtWidgets import QLabel
 
 import logging
 
-from xWidgets.UserTile import UserTile
+from xGUI.UserTileWidget import UserTileWidget
 
 class UserSelectWidget(QGroupBox):
     def __init__(self, userList, userDir):
         super().__init__()
         self.setUserList(userList)
-        self.serUserDir(userDir)
+        self.setUserDir(userDir)
         self.initUI()
     
     def setUserList(self, userList):
@@ -30,7 +30,7 @@ class UserSelectWidget(QGroupBox):
         self.hideLoginForm()
         
     def createElements(self):
-        self.userButtons = [UserTile(u, self) for u in self._userList]
+        self.userButtons = [UserTileWidget(u) for u in self._userList]
         for b, u in zip(self.userButtons, self._userList):
             b.setProfilePicture(self._userDir+u+'/profile/profile_pic.png')
             b.createLayout()

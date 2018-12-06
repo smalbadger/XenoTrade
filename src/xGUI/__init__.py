@@ -1,6 +1,10 @@
-from xWidgets.Dashboard      import Dashboard
-from xWidgets.LoadingScreen  import LoadingScreen
-from xWidgets.Stock          import Stock
-from xWidgets.StockList      import StockList
-from xWidgets.UserSelect     import UserSelect
-from xWidgets.UserTile       import UserTile
+from xGUI.XenoTradeGUI         import XenoTradeGUI
+
+from xGUI.DashboardWidget      import DashboardWidget
+from xGUI.LoadingScreenWidget  import LoadingScreenWidget
+from xGUI.StockWidget          import StockWidget
+from xGUI.StockListWidget      import StockListWidget
+from xGUI.UserSelectWidget     import UserSelectWidget
+from xGUI.UserTileWidget       import UserTileWidget
+
+

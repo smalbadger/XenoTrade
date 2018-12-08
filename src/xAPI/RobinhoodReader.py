@@ -56,6 +56,30 @@ class RobinhoodReader():
     def extended_hours_equity(self):
         return self.api.extended_hours_equity()
         
+    def extended_hours_market_value(self):
+        return self.api.extended_hours_market_value()
+        
+    def last_core_equity(self):
+        return self.api.last_core_equity()
+        
+    def last_core_market_value(self):
+        return self.api.last_core_market_value()
+        
+    def market_value(self):
+        return self.api.market_value()
+        
+    def order_history(self, orderId=None):
+        return self.api.order_history(orderId)
+        
+    def dividends(self):
+        return self.api.dividends()
+        
+    def positions(self):
+        return self.api.positions()
+        
+    def securities_owned(self):
+        return self.securities_owned()
+        
         
     ##############################
     # Non user-specific requests #
@@ -146,5 +170,5 @@ class RobinhoodReader():
      
     
     def __str__(self):
-        return "Reader portion of the Robinhood API"
+        return "Robinhood Reader API"
         

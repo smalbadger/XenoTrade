@@ -14,9 +14,6 @@ from distutils.dir_util import copy_tree
 import xCore.Globals as GS
 
 from xCore.User import User
-from xCore.TaskManager import TaskManager
-from xCore.UpdateManager import UpdateManager
-from xCore.UpdateDependencyGraph import UpdateDependencyGraph
 from xCore.abstract import XenoObject
 
 class Kernel(XenoObject):
@@ -24,9 +21,6 @@ class Kernel(XenoObject):
         XenoObject.__init__(self)
 
         self.setCurrentUser(user)
-        self.setTaskManager(TaskManager(self, GS.NUM_THREADS, GS.NUM_PROCESSES))
-        self.setUpdateGraph(UpdateDependencyGraph(self))
-        self.setUpdateManager(UpdateManager(self, self.getUpdateGraph()))
         
     def __del__(self):
         pass
@@ -40,15 +34,6 @@ class Kernel(XenoObject):
 
     def getCurrentUser(self):
         return self._currentUser
-        
-    def getTaskManager(self):
-        return self._taskManager
-        
-    def getUpdateManager(self):
-        return self._updateManager
-        
-    def getUpdateGraph(self):
-        return self._updateGraph
         
     def getBaseDir(self):
         return os.getcwd().replace('\\','/')[:-3]

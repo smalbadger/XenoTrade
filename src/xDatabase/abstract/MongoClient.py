@@ -34,6 +34,14 @@ class MongoClient():
             # logging.critical("Failed to create mongo client. Make sure MongoDB is installed and started.")
             print("Error: Couldn't connect to mongo instance")
             sys.exit(2)
+          
+    def database(self):
+        ''' get the current database '''
+        return self._db
+        
+    def collection(self):
+        ''' get the current collection '''
+        return self._collection
             
     def switchDB(self, dbName):
         ''' switch databases '''

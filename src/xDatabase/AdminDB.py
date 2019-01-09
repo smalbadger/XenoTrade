@@ -1,23 +1,18 @@
 '''
-Class:      <ClassName>
-Author(s):  <Author>
-Date:       <Date>
-Type:       <ABSTRACT/INSTANTIABLE/FINAL/...>
+Class:      AdminDB
+Author(s):  Sam Badger
+Date:       January 7, 2019
+Type:       FINAL
 Description:
-            <Your description here ...>
+            This class is the interface to the XenoTrade.Admin database.
+            The admin database will be password protected once a user claims admin privileges. 
 '''
 
-class <ClassName>(<InheritsFrom>):
+import sys
+from xDatabase.abstract.MongoClient import MongoClient
+
+class AdminDB(MongoClient):
     def __init__(self):
-        super(self, <InheritsFrom>).__init__(self)
-        ...
+        super().__init__()
         
-    def __del__(self):
-        pass
-        
-    def __eq__(self, other):
-        return True
-        
-    def __str__(self):
-        return ""
-        
+    

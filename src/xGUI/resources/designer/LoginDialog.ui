@@ -9,15 +9,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1824</width>
+    <width>1910</width>
     <height>1452</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
-  </property>
-  <property name="sizeGripEnabled">
-   <bool>false</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
@@ -58,7 +55,7 @@
       </size>
      </property>
      <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
@@ -67,7 +64,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame_3">
+    <widget class="QFrame" name="signUpBtnFrame">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -112,7 +109,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame">
+    <widget class="QFrame" name="errorLabelFrame">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -212,27 +209,6 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="genderLabel">
-                <property name="text">
-                 <string>Gender:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QComboBox" name="genderComboBox">
-                <item>
-                 <property name="text">
-                  <string>male</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>female</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
               <item row="2" column="0">
                <widget class="QLabel" name="birthdayLabel">
                 <property name="text">
@@ -247,6 +223,16 @@
                <widget class="QLabel" name="passwordLabel">
                 <property name="text">
                  <string>Password:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="newPasswordField">
+                <property name="echoMode">
+                 <enum>QLineEdit::Password</enum>
+                </property>
+                <property name="placeholderText">
+                 <string>password</string>
                 </property>
                </widget>
               </item>
@@ -267,14 +253,55 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="QLineEdit" name="newPasswordField">
-                <property name="echoMode">
-                 <enum>QLineEdit::Password</enum>
+              <item row="1" column="0">
+               <widget class="QLabel" name="profilePicLabel">
+                <property name="text">
+                 <string>Profile Picture:</string>
                 </property>
-                <property name="placeholderText">
-                 <string>password</string>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QFrame" name="frame">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
                 </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_11">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QLineEdit" name="profilePicPathField">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                   <property name="placeholderText">
+                    <string>Press that button -&gt;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QToolButton" name="profilePicChooserBtn">
+                   <property name="text">
+                    <string>...</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>

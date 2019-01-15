@@ -22,98 +22,143 @@ from PySide2.QtCore    import *
 from PySide2.QtGui     import *
 
 from resources.compiled.LoginDialog import Ui_Dialog
+
 from xDatabase.UserDB import UserDB
+from xDatabase.SharedDB import SharedDB
+from xGUI.UserLoginTile import UserLoginTile
+from xExceptions.UsernameError import UsernameError
+from xUtils.UsernameValidator import UsernameValidator
 
 
-
-class LoginDialog(QDialog):
+class LoginDialog(QWidget, Ui_Dialog):
     def __init__(self):
         super().__init__()
         
+        # group all user buttons together
+        self.userTiles = {}
+        self.selectedUser = None
+        self.userBtnGroup = QButtonGroup()
+        self.userBtnGroup.buttonClicked.connect(self.selectUser)
+        
+        
         # load the UI
-        self.ui = Ui_Dialog()
-        self.ui.setupUi(self)
+        self.setupUi(self)
         
         self.setWindowTitle("XenoTrade - Login")
         self.hideSignUpFrame()
         self.hideSignInFrame()
-        self.ui.errorLabel.hide()
+        self.errorLabel.hide()
         
         self.loadUserTiles()
-        self.ui.signUpBtn.clicked.connect(self.showSignUpFrame)
-        self.ui.nevermindBtn_1.clicked.connect(self.resetUI)
-        self.ui.nevermindBtn_2.clicked.connect(self.resetUI)
-        self.ui.createAccountBtn.clicked.connect(self.createAccount)
-        self.ui.signInBtn.clicked.connect(self.signIn)
-        self.ui.usernameField.returnPressed.connect(self.checkValidUsername)
+        self.signUpBtn.clicked.connect(self.showSignUpFrame)
+        self.nevermindBtn_1.clicked.connect(self.resetUI)
+        self.nevermindBtn_2.clicked.connect(self.resetUI)
+        self.createAccountBtn.clicked.connect(self.createAccount)
+        self.signInBtn.clicked.connect(self.signIn)
+        self.usernameField.returnPressed.connect(self.checkValidUsername)
+        self.usernameField.textChanged.connect(self.checkValidUsername)
+        self.profilePicChooserBtn.clicked.connect(self.selectProfilePic)
+        self.confirmNewPasswordField.textChanged.connect(self.checkPasswordMatch)
         
     def loadUserTiles(self):
         names = UserDB().getUserList()
         for name in names:
-            pass
-        
+            sdb = SharedDB()
+            img = sdb.getProfilePicture(name, "Pixmap")
+            u = UserLoginTile(username=name)
+            u.setProfilePic(img, picFormat="Pixmap")
+            self.userTiles[name] = u
+            self.userTileFrame.layout().addWidget(u)
+            self.userBtnGroup.addButton(u.usernameBtn)
+            
     def resetUI(self):
-        self.ui.signUpBtn.show()
+        if self.selectedUser != None:
+            #remove selected user decorations
+            self.userTiles[self.selectedUser].undecorate()    
+            self.selectedUser = None
+        
+        self.userTileFrame.show()
+        self.signUpBtn.show()
         self.hideErrorLabel()
         self.hideSignUpFrame()
         self.hideSignInFrame()
         
     def showSignUpFrame(self):
-        self.ui.signUpFrame.show()
-        self.ui.signUpBtn.hide()
+        self.userTileFrame.hide()
+        self.signUpFrame.show()
+        self.signUpBtn.hide()
         
     def showSignInFrame(self):
-        self.ui.signInFrame.show()
+        self.signInFrame.show()
+        self.signUpBtn.hide()
         
     def showErrorLabel(self, errorMessage):
-        self.ui.errorLabel.setText(errorMessage)
-        self.ui.errorLabel.show()
+        self.errorLabel.setText(errorMessage)
+        self.errorLabel.show()
         
     def hideSignUpFrame(self):
-        self.ui.signUpFrame.hide()
+        self.signUpFrame.hide()
         
     def hideSignInFrame(self):
-        self.ui.signInFrame.hide()
+        self.signInFrame.hide()
         
     def hideErrorLabel(self):
-        self.ui.errorLabel.hide()
+        self.errorLabel.hide()
+        
+    def selectProfilePic(self):
+        dir = "~/"
+        filters = "Images (*.png *.xpm *.jpg)"
+        selected_filter = "Images (*.png *.xpm *.jpg)"
+        fileObj = QFileDialog.getOpenFileName(None, " Profile Picture Chooser ", dir, filters, selected_filter)
+        profilePicPath = fileObj[0]
+        self.profilePicPathField.setText(profilePicPath)
         
     def createAccount(self):
         self.hideErrorLabel()
         
-        username = self.ui.usernameField.text()
-        if not self.checkValidUsername(username):
-            self.showErrorLabel("Please change username")
+        # get user values from UI
+        username = self.usernameField.text()
+        profilePicPath = self.profilePicPathField.text()
+        birthday = self.birthdayEditor.text()
+        pwd = self.newPasswordField.text()
+        cpwd= self.confirmNewPasswordField.text()
+        
+        # validate both username and password. If there's an exception, abort.
+        try:
+            UsernameValidator(username, silent=False)
+            PasswordValidator(pwd, confirm=cpwd, silent=False)
+        except:
             return
             
-        pwd = self.ui.newPasswordField.text()
-        cpwd= self.ui.confirmNewPasswordField.text()
-        
-        if pwd != cpwd:
-            self.showErrorLabel("Passwords don't match")
-            return
             
-        # TODO: create new account using username and password
+        userDB = UserDB()
+        userDB.createUser(username, pwd, profilePicPath, birthday)
         
+    def selectUser(self, btn):
+        #if a user is already selected, undecorate it before selecting new user
+        if self.selectedUser != None: 
+            self.userTiles[self.selectedUser].undecorate()
+              
+        self.selectedUser = btn.text()
+        self.userTiles[self.selectedUser].decorate()
+        self.showSignInFrame()
         
     def signIn(self):
         username = self.selectedUser
-        pwd = self.ui.passwordField.text()
+        pwd = self.passwordField.text()
         
         # TODO: sign the user in. if successful, close this window and open dashboard.
         #       if failed, display error message and clear password field
         
     def checkValidUsername(self, username):
-        # TODO: check if username is available
+        self.usernameValidator = UsernameValidator(username, silent=True)
         
-        if len(username) < 2:
-            self.showErrorLabel("Your username must be at least 2 characters.")
+        
+    def checkPasswordMatch(self):
+        pwd = self.newPasswordField.text()
+        cpwd= self.confirmNewPasswordField.text()
+        if pwd != cpwd: 
             return False
-            
-        if re.search('[A-Z]',username) is None: 
-            self.showErrorLabel("Your username must have at least one capital letter.")
-            return False
-            
         return True
         
 if __name__ == "__main__":

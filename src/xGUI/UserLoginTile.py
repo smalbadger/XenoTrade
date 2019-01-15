@@ -6,34 +6,44 @@ from PySide2.QtGui     import *
 
 from resources.compiled.UserLoginTile import Ui_Form
 
-class UserLoginTile(QWidget):
+class UserLoginTile(QWidget, Ui_Form):
     userSelected = Signal(str)
 
     def __init__(self, username=None, profilePicPath=None):
         super().__init__()
         
         # load the UI
-        self.ui = Ui_Form()
-        self.ui.setupUi(self)
+        self.setupUi(self)
         
         # set the username and profile picture if provided
         if username != None:
-            self.ui.usernameBtn.setText(username)
+            self.usernameBtn.setText(username)
             
         if profilePicPath != None:
             pixmap = QPixmap(profilePicPath)
-            self.ui.profilePicLabel.setPixmap(pixmap)
-            self.ui.profilePicLabel.setMask(pixmap.mask())
-            self.ui.profilePicLabel.setText("")
+            self.setProfilePic(pixmap, picFormat="Pixmap")
         
         # connect the UI
-        self.ui.usernameBtn.clicked.connect(self.onUserSelected)
-        
-    def resize(self, width, height):
-        super().resize(width, height)
+        self.usernameBtn.clicked.connect(self.onUserSelected)
         
     def onUserSelected(self):
-        self.userSelected.emit(self.ui.usernameBtn.text())
+        self.userSelected.emit(self.usernameBtn.text())
+        
+    def setProfilePic(self, pic, picFormat="Pixmap"):
+        if picFormat == "File":
+            pic = QPixmap(pic)
+            picFormat = "Pixmap"
+    
+        if picFormat == "Pixmap":
+            self.profilePicLabel.setPixmap(pic)
+            self.profilePicLabel.setMask(pic.mask())
+            self.profilePicLabel.setText("")
+            
+    def decorate(self):
+        self.setStyleSheet("background-color: green")
+        
+    def undecorate(self):
+        self.setStyleSheet("background-color: white")
   
 if __name__ == "__main__":
 

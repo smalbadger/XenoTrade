@@ -58,7 +58,7 @@ class LoginDialog(QWidget, Ui_Dialog):
         self.usernameField.returnPressed.connect(self.checkValidUsername)
         self.usernameField.textChanged.connect(self.checkValidUsername)
         self.profilePicChooserBtn.clicked.connect(self.selectProfilePic)
-        self.confirmNewPasswordField.textChanged.connect(self.checkPasswordMatch)
+        self.confirmNewPasswordField.textChanged.connect(self.checkValidPassword)
         
     def loadUserTiles(self):
         names = UserDB().getUserList()
@@ -126,7 +126,7 @@ class LoginDialog(QWidget, Ui_Dialog):
         # validate both username and password. If there's an exception, abort.
         try:
             UsernameValidator(username, silent=False)
-            PasswordValidator(pwd, confirm=cpwd, silent=False)
+            PasswordValidator(pwd, confirmation=cpwd, silent=False)
         except:
             return
             
@@ -152,14 +152,13 @@ class LoginDialog(QWidget, Ui_Dialog):
         
     def checkValidUsername(self, username):
         self.usernameValidator = UsernameValidator(username, silent=True)
+        # TODO: show exceptions in error box
         
-        
-    def checkPasswordMatch(self):
-        pwd = self.newPasswordField.text()
-        cpwd= self.confirmNewPasswordField.text()
-        if pwd != cpwd: 
-            return False
-        return True
+    def checkValidPassword(self):
+        password = newPasswordField.text()
+        confirmation = confirmNewPasswordField.text()
+        self.passwordValidator = PasswordValidator(password, confirmation, silent=True)
+        # TODO: show exceptions in error box
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
